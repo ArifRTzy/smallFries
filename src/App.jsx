@@ -7,7 +7,7 @@ import Comp from "./components/Comp";
 const App = () => {
   return (
     <Router>
-      <div className="h-[200vh]">
+      <div className="w-full">
         <Navbar />
 
         <div className="flex-grow">

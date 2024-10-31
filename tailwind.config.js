@@ -8,9 +8,13 @@ export default {
     extend: {
       screens: {
         mx: "1444px"
+      },
+      fontFamily: {
+        poppins: ["Poppins", "sans-serif"]
       }
     },
   },
+  darkMode:  'class',
   plugins: [],
 }
 

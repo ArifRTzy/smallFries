@@ -1,7 +1,7 @@
-import { dark, light, system } from "../utils";
+import { dark, darksBlue, light, lightsBlue, system, systemsBlue } from "../utils";
 
-export const theme = [
-    {img: light, text: 'Light',},
-    {img: dark, text: 'Dark', },
-    {img: system, text: 'System',}
+export const themeOptions = [
+    {img: light, text: 'Light', imgBlue: lightsBlue},
+    {img: dark, text: 'Dark', imgBlue: darksBlue},
+    {img: system, text: 'System', imgBlue: systemsBlue}
 ]

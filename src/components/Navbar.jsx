@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { themeOptions } from "../constants";
-import { close, dark, github, light, menuDot, search } from "../utils";
+import { close, dark, dropdown, github, light, menuDot, search } from "../utils";
 
 const Navbar = () => {
   const [themesMenu, setThemeMenu] = useState(false);
@@ -37,6 +37,8 @@ const Navbar = () => {
   const lightRef = useRef(null);
   const darkRef = useRef(null);
   const systemRef = useRef(null);
+  const selectRef = useRef(null)
+  const selectedRef = useRef(null)
 
   useEffect(() => {
     const handleOutsideThemes = (e) => {
@@ -98,6 +100,17 @@ const Navbar = () => {
     localStorage.setItem("theme", theme);
     localStorage.setItem("themeText", JSON.stringify(themeText));
   }, [theme, themeText]);
+
+  useEffect(()=>{
+    const handleSelection = ()=>{
+      selectRef.current.focus()
+      console.log('succes')
+    }
+
+    selectedRef.current.addEventListener('click', handleSelection)
+
+    return selectedRef.current.removeEventListener('click', handleSelection)
+  }, [])
 
   return (
     <div className="bg-white w-full border-b-2 border-[#E7E7E9] fixed z-10 dark:bg-black">
@@ -168,16 +181,35 @@ const Navbar = () => {
           <img src={search} className="w-5" />
           <div className="">
             <img src={menuDot} className="w-6 ml-4" />
-            <div className="">
-              <p>Github</p>
-              <div className="">
-                <div className="">
-                  <p>Switch theme</p>
+            <div className="bg-white w-72 h-96 border-2 rounded-lg">
+              <div className="mx-5 py-6 flex flex-col justify-between h-full">
+                <div className="flex justify-between">
+                  <a className="font-medium text-base" href="">
+                    GitHub
+                  </a>
                   <img src={close} className="w-5" />
                 </div>
-                <select name="" id="">
-                  <option value="">light</option>
-                </select>
+                <div className="flex justify-between items-center">
+                  <p className="font-normal text-slate-700">Switch theme</p>
+                  <div className="relative">
+                  <select className="w-28 h-11 opacity-0 absolute" ref={selectRef}>
+                    <option value="">Light</option>
+                    <option value="">Dark</option>
+                    <option value="">System</option>
+                  </select>
+                  <div className="border-2 flex items-center w-28 h-11 px-2 rounded-lg bg-white" ref={selectedRef}>
+                    {
+                      themeOptions.map((e, i)=>(
+                    <div className={`items-center w-full justify-between ${i>0 ? 'hidden' : 'flex'}`} key={i}>
+                      <img className="w-5" src={e.img} alt={e.text} />
+                      <p className="font-semibold text-slate-700">{e.text}</p>
+                      <img className="w-3" src={dropdown} alt="dropdown" />
+                    </div>
+                      ))
+                    }
+                  </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

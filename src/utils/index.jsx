@@ -9,6 +9,7 @@ import lightsBlues from "/images/sun-blue.svg"
 import darksBlues from "/images/moon-blue.svg"
 import systemsBlues from "/images/pc-blue.svg"
 import closes from "/images/close.svg"
+import dropdowns from "/images/caret-down.svg"
 
 export const menuDot = menuDots
 export const menuList = menuLists
@@ -21,3 +22,4 @@ export const lightsBlue = lightsBlues
 export const darksBlue = darksBlues
 export const systemsBlue = systemsBlues
 export const close = closes
+export const dropdown = dropdowns

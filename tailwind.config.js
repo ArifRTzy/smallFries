@@ -7,11 +7,12 @@ export default {
   theme: {
     extend: {
       screens: {
-        mx: "1444px"
+        mx: "1444px",
+        vm: "322px"
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"]
-      }
+      },
     },
   },
   darkMode:  'class',

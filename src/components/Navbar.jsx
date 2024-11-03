@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { themeOptions } from "../constants";
-import { close, dark, dropdown, github, light, menuDot, search } from "../utils";
+import {
+  close,
+  dark,
+  dropdown,
+  github,
+  light,
+  menuDot,
+  search,
+} from "../utils";
 
 const Navbar = () => {
   const [themesMenu, setThemeMenu] = useState(false);
@@ -30,15 +38,19 @@ const Navbar = () => {
     }
     return { sun: false, moon: false, system: true };
   });
-
+  const [selectedRefShow, setSelectedRefShow] = useState(0);
+  const [menuShow, setMenuShow] = useState(false);
   const { sun, moon, system } = themeText;
   const themesRef = useRef(null);
   const sunRef = useRef(null);
   const lightRef = useRef(null);
   const darkRef = useRef(null);
   const systemRef = useRef(null);
-  const selectRef = useRef(null)
-  const selectedRef = useRef(null)
+  const selectRef = useRef(null);
+  const selectedRef = useRef(null);
+  const menuRef = useRef(null);
+  const closeRef = useRef(null);
+  const blurBgRef = useRef(null)
 
   useEffect(() => {
     const handleOutsideThemes = (e) => {
@@ -57,22 +69,32 @@ const Navbar = () => {
       }
     };
 
+    const handleMenuShow = (e) => {
+      if (menuRef.current.contains(e.target)) {
+        setMenuShow((prev) => !prev);
+      } else if (closeRef.current.contains(e.target) || blurBgRef.current.contains(e.target)) {
+        setMenuShow((prev) => !prev);
+      }
+    };
+
     document.addEventListener("click", handleOutsideThemes);
+    document.addEventListener("click", handleMenuShow);
 
     return () => {
       document.removeEventListener("click", handleOutsideThemes);
+      document.removeEventListener("click", handleMenuShow);
     };
   }, [themesMenu]);
 
   useEffect(() => {
     const updatedThemes = (e) => {
-      if (lightRef.current.contains(e.target)) {
+      if (lightRef.current.contains(e.target) || selectedRefShow == 0) {
         setTheme("light");
         setThemeText({ sun: true, moon: false, system: false });
-      } else if (darkRef.current.contains(e.target)) {
+      } else if (darkRef.current.contains(e.target) || selectedRefShow == 1) {
         setTheme("dark");
         setThemeText({ sun: false, moon: true, system: false });
-      } else if (systemRef.current.contains(e.target)) {
+      } else if (systemRef.current.contains(e.target) || selectedRefShow == 2) {
         setTheme(
           window.matchMedia("prefer-color-scheme: dark").matches
             ? "dark"
@@ -85,7 +107,7 @@ const Navbar = () => {
     document.addEventListener("click", updatedThemes);
 
     return () => document.removeEventListener("click", updatedThemes);
-  }, [sun, moon, system]);
+  }, [sun, moon, system, selectedRefShow]);
 
   useEffect(() => {
     if (theme == "dark") {
@@ -101,16 +123,11 @@ const Navbar = () => {
     localStorage.setItem("themeText", JSON.stringify(themeText));
   }, [theme, themeText]);
 
-  useEffect(()=>{
-    const handleSelection = ()=>{
-      selectRef.current.focus()
-      console.log('succes')
-    }
-
-    selectedRef.current.addEventListener('click', handleSelection)
-
-    return selectedRef.current.removeEventListener('click', handleSelection)
-  }, [])
+  useEffect(() => {
+    selectRef.current.addEventListener("change", () => {
+      setSelectedRefShow(selectRef.current.selectedIndex);
+    });
+  });
 
   return (
     <div className="bg-white w-full border-b-2 border-[#E7E7E9] fixed z-10 dark:bg-black">
@@ -179,35 +196,57 @@ const Navbar = () => {
         </div>
         <div className="flex lg:hidden">
           <img src={search} className="w-5" />
-          <div className="">
-            <img src={menuDot} className="w-6 ml-4" />
-            <div className="bg-white w-72 h-96 border-2 rounded-lg">
-              <div className="mx-5 py-6 flex flex-col justify-between h-full">
+          <img src={menuDot} ref={menuRef} className="w-6 ml-4" />
+          <div
+            className={`absolute top-0 right-0 ${
+              menuShow ? "block" : "hidden"
+            }`}
+          >
+            <div ref={blurBgRef} className="w-screen inset-0 h-[100vh] bg-black/20 backdrop-blur-sm fixed"></div>
+            <div className="bg-white w-full vm:w-80 h-[22rem] border-2 rounded-lg fixed z-20 top-4 right-4">
+              <div className="mx-5 py-5 flex flex-col justify-between h-full">
                 <div className="flex justify-between">
-                  <a className="font-medium text-base" href="">
+                  <a className="font-medium text-base" href="https://github.com/ArifRTzy">
                     GitHub
                   </a>
-                  <img src={close} className="w-5" />
+                  <img src={close} ref={closeRef} className="w-5" />
                 </div>
                 <div className="flex justify-between items-center">
                   <p className="font-normal text-slate-700">Switch theme</p>
                   <div className="relative">
-                  <select className="w-28 h-11 opacity-0 absolute" ref={selectRef}>
-                    <option value="">Light</option>
-                    <option value="">Dark</option>
-                    <option value="">System</option>
-                  </select>
-                  <div className="border-2 flex items-center w-28 h-11 px-2 rounded-lg bg-white" ref={selectedRef}>
-                    {
-                      themeOptions.map((e, i)=>(
-                    <div className={`items-center w-full justify-between ${i>0 ? 'hidden' : 'flex'}`} key={i}>
-                      <img className="w-5" src={e.img} alt={e.text} />
-                      <p className="font-semibold text-slate-700">{e.text}</p>
-                      <img className="w-3" src={dropdown} alt="dropdown" />
+                    <select
+                      className={`${
+                        selectedRefShow < 2 ? "w-[115px]" : "w-[137px]"
+                      } h-11 opacity-0 absolute`}
+                      ref={selectRef}
+                    >
+                      <option value="">Light</option>
+                      <option value="">Dark</option>
+                      <option value="">System</option>
+                    </select>
+                    <div
+                      className="border-2 flex items-center h-11 px-2 rounded-lg bg-white"
+                      ref={selectedRef}
+                    >
+                      {themeOptions.map((e, i) => (
+                        <div
+                          className={`items-center w-full justify-between ${
+                            i != selectedRefShow ? "hidden" : "flex"
+                          }`}
+                          key={i}
+                        >
+                          <img className="w-5 mr-3" src={e.img} alt={e.text} />
+                          <p className="font-semibold text-slate-700">
+                            {e.text}
+                          </p>
+                          <img
+                            className="w-3 ml-3"
+                            src={dropdown}
+                            alt="dropdown"
+                          />
+                        </div>
+                      ))}
                     </div>
-                      ))
-                    }
-                  </div>
                   </div>
                 </div>
               </div>
@@ -215,6 +254,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+      <div className=""></div>
     </div>
   );
 };

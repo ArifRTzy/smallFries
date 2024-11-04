@@ -77,12 +77,23 @@ const Navbar = () => {
       }
     };
 
+    const handleMenuVisibility = ()=>{
+      const width = window.innerWidth
+      if(width >= 1024){
+        setMenuShow((prev)=>!prev)
+      }else{
+        setMenuShow(false)
+      }
+    }
+
     document.addEventListener("click", handleOutsideThemes);
     document.addEventListener("click", handleMenuShow);
+    window.addEventListener('resize', handleMenuVisibility)
 
     return () => {
       document.removeEventListener("click", handleOutsideThemes);
       document.removeEventListener("click", handleMenuShow);
+      window.removeEventListener('resize', handleMenuVisibility)
     };
   }, [themesMenu]);
 

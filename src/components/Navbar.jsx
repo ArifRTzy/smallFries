@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { themeOptions } from "../constants";
+import { searchMenu, themeOptions } from "../constants";
 import {
   close,
+  code,
   dark,
   dropdown,
   github,
@@ -40,6 +41,8 @@ const Navbar = () => {
   });
   const [selectedRefShow, setSelectedRefShow] = useState(0);
   const [menuShow, setMenuShow] = useState(false);
+  const [selectedSearchMenu, setSelectedSearchMenu] = useState(0);
+  const [searchShow, setSearchShow] = useState(false)
   const { sun, moon, system } = themeText;
   const themesRef = useRef(null);
   const sunRef = useRef(null);
@@ -50,7 +53,16 @@ const Navbar = () => {
   const selectedRef = useRef(null);
   const menuRef = useRef(null);
   const closeRef = useRef(null);
-  const blurBgRef = useRef(null)
+  const blurBgRef = useRef(null);
+  const searchRef = useRef(null)
+  const searchCloseRef = useRef(null)
+  const searchBlurBgRef = useRef(null)
+  const searchParentRef = useRef(null)
+  const searchInputRef = useRef(null)
+
+  if(searchShow){
+    searchInputRef.current.focus()
+  }
 
   useEffect(() => {
     const handleOutsideThemes = (e) => {
@@ -72,28 +84,53 @@ const Navbar = () => {
     const handleMenuShow = (e) => {
       if (menuRef.current.contains(e.target)) {
         setMenuShow((prev) => !prev);
-      } else if (closeRef.current.contains(e.target) || blurBgRef.current.contains(e.target)) {
+      } else if (
+        closeRef.current.contains(e.target) ||
+        blurBgRef.current.contains(e.target)
+      ) {
         setMenuShow((prev) => !prev);
       }
     };
 
-    const handleMenuVisibility = ()=>{
-      const width = window.innerWidth
-      if(width >= 1024){
-        setMenuShow((prev)=>!prev)
-      }else{
-        setMenuShow(false)
+    const handleMenuVisibility = () => {
+      const width = window.innerWidth;
+      if (width >= 1024) {
+        setMenuShow(false);
+      }
+    };
+
+    const handleSelectedSearch = (e) => {
+      if (e.key === "ArrowDown") {
+        setSelectedSearchMenu((prev) => (prev + 1) % searchMenu.length);
+      }
+      if (e.key === "ArrowUp") {
+        setSelectedSearchMenu((prev) =>
+          prev === 0 ? searchMenu.length - 1 : prev - 1
+        );
+      }
+    };
+
+    const handleSearch = (e)=>{
+      if(searchRef.current.contains(e.target)){
+        setSearchShow((prev)=>!prev)
+      }else if(searchCloseRef.current.contains(e.target) || searchBlurBgRef.current.contains(e.target) && !searchParentRef.current.contains(e.target)){
+        setSearchShow((prev)=>!prev)
       }
     }
 
     document.addEventListener("click", handleOutsideThemes);
     document.addEventListener("click", handleMenuShow);
-    window.addEventListener('resize', handleMenuVisibility)
+    window.addEventListener("resize", handleMenuVisibility);
+    document.addEventListener("keydown", handleSelectedSearch);
+    document.addEventListener("click", handleSearch);
 
     return () => {
       document.removeEventListener("click", handleOutsideThemes);
       document.removeEventListener("click", handleMenuShow);
-      window.removeEventListener('resize', handleMenuVisibility)
+      window.removeEventListener("resize", handleMenuVisibility);
+      document.removeEventListener("keydown", handleSelectedSearch);
+      document.removeEventListener("click", handleSearch);
+
     };
   }, [themesMenu]);
 
@@ -206,18 +243,24 @@ const Navbar = () => {
           </a>
         </div>
         <div className="flex lg:hidden">
-          <img src={search} className="w-5" />
+          <img src={search} ref={searchRef} className="w-5" />
           <img src={menuDot} ref={menuRef} className="w-6 ml-4" />
           <div
             className={`absolute top-0 right-0 ${
               menuShow ? "block" : "hidden"
             }`}
           >
-            <div ref={blurBgRef} className="w-screen inset-0 h-[100vh] bg-black/20 backdrop-blur-sm fixed"></div>
+            <div
+              ref={blurBgRef}
+              className="w-screen inset-0 h-[100vh] bg-black/20 backdrop-blur-sm fixed"
+            ></div>
             <div className="bg-white w-full vm:w-80 h-[22rem] border-2 rounded-lg fixed z-20 top-4 right-4">
               <div className="mx-5 py-5 flex flex-col justify-between h-full">
                 <div className="flex justify-between">
-                  <a className="font-medium text-base" href="https://github.com/ArifRTzy">
+                  <a
+                    className="font-medium text-base"
+                    href="https://github.com/ArifRTzy"
+                  >
                     GitHub
                   </a>
                   <img src={close} ref={closeRef} className="w-5" />
@@ -265,7 +308,49 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <div className=""></div>
+      <div ref={searchBlurBgRef} className={`w-screen h-[100vh] bg-black/20 backdrop-blur-sm inset-0 ${searchShow ? 'fixed' : 'hidden'}`}>
+        <div className="flex justify-center h-full md:mt-16 md:px-32 p-6">
+          <div ref={searchParentRef} className="bg-white w-full lg:w-[750px] h-[500px] rounded-lg">
+            <header className="flex justify-between items-center pb-3 border-b-[1px] p-4">
+              <img src={search} alt="search" className="w-5" />
+              <input
+                type="text"
+                placeholder="Search something"
+                ref={searchInputRef}
+                className="mx-4 w-full text-[15px] flex-1 outline-none focus:border-0 focus:outline-none"
+              />
+              <img src={close} alt="close" className="w-5 cursor-pointer" ref={searchCloseRef}/>
+            </header>
+            <div className="p-4 pl-5">
+              <div className="">
+                <h2 className="text-base font-medium">Navbar</h2>
+                {searchMenu.map((e, i) => (
+                  <div
+                    key={i}
+                    className={`flex justify-between px-3 py-3 rounded-lg items-center group hover:bg-[#0EA5E9] ${
+                      i === selectedSearchMenu ? "bg-[#0EA5E9]" : "bg-[#F8FAFC]"
+                    }`}
+                  >
+                    <img
+                      src={code}
+                      alt="code"
+                      className="w-7 rounded-lg border-2 border-[#EAECEF] bg-white p-1"
+                    />
+                    <p className="flex-1 px-3 text-[#334155] group-hover:text-white">
+                      {e}
+                    </p>
+                    <img
+                      src={dropdown}
+                      alt="dropright"
+                      className="-rotate-90 w-3 cursor-pointer"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

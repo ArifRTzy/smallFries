@@ -5,3 +5,5 @@ export const themeOptions = [
     {img: dark, text: 'Dark', imgBlue: darksBlue},
     {img: system, text: 'System', imgBlue: systemsBlue}
 ]
+
+export const searchMenu = ["Navbar float", "Navbar fixed", "Navbar sticky"]

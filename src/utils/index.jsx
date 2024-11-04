@@ -10,6 +10,7 @@ import darksBlues from "/images/moon-blue.svg"
 import systemsBlues from "/images/pc-blue.svg"
 import closes from "/images/close.svg"
 import dropdowns from "/images/caret-down.svg"
+import codes from "/images/code.svg"
 
 export const menuDot = menuDots
 export const menuList = menuLists
@@ -23,3 +24,4 @@ export const darksBlue = darksBlues
 export const systemsBlue = systemsBlues
 export const close = closes
 export const dropdown = dropdowns
+export const code = codes

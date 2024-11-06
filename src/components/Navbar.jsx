@@ -42,7 +42,7 @@ const Navbar = () => {
   const [selectedRefShow, setSelectedRefShow] = useState(0);
   const [menuShow, setMenuShow] = useState(false);
   const [selectedSearchMenu, setSelectedSearchMenu] = useState(0);
-  const [searchShow, setSearchShow] = useState(false)
+  const [searchShow, setSearchShow] = useState(false);
   const { sun, moon, system } = themeText;
   const themesRef = useRef(null);
   const sunRef = useRef(null);
@@ -54,14 +54,14 @@ const Navbar = () => {
   const menuRef = useRef(null);
   const closeRef = useRef(null);
   const blurBgRef = useRef(null);
-  const searchRef = useRef(null)
-  const searchCloseRef = useRef(null)
-  const searchBlurBgRef = useRef(null)
-  const searchParentRef = useRef(null)
-  const searchInputRef = useRef(null)
+  const searchRef = useRef(null);
+  const searchCloseRef = useRef(null);
+  const searchBlurBgRef = useRef(null);
+  const searchParentRef = useRef(null);
+  const searchInputRef = useRef(null);
 
-  if(searchShow){
-    searchInputRef.current.focus()
+  if (searchShow) {
+    searchInputRef.current.focus();
   }
 
   useEffect(() => {
@@ -110,13 +110,17 @@ const Navbar = () => {
       }
     };
 
-    const handleSearch = (e)=>{
-      if(searchRef.current.contains(e.target)){
-        setSearchShow((prev)=>!prev)
-      }else if(searchCloseRef.current.contains(e.target) || searchBlurBgRef.current.contains(e.target) && !searchParentRef.current.contains(e.target)){
-        setSearchShow((prev)=>!prev)
+    const handleSearch = (e) => {
+      if (searchRef.current.contains(e.target)) {
+        setSearchShow((prev) => !prev);
+      } else if (
+        searchCloseRef.current.contains(e.target) ||
+        (searchBlurBgRef.current.contains(e.target) &&
+          !searchParentRef.current.contains(e.target))
+      ) {
+        setSearchShow((prev) => !prev);
       }
-    }
+    };
 
     document.addEventListener("click", handleOutsideThemes);
     document.addEventListener("click", handleMenuShow);
@@ -130,25 +134,27 @@ const Navbar = () => {
       window.removeEventListener("resize", handleMenuVisibility);
       document.removeEventListener("keydown", handleSelectedSearch);
       document.removeEventListener("click", handleSearch);
-
     };
   }, [themesMenu]);
 
   useEffect(() => {
     const updatedThemes = (e) => {
-      if (lightRef.current.contains(e.target) || selectedRefShow == 0) {
+      if (lightRef.current.contains(e.target)) {
         setTheme("light");
         setThemeText({ sun: true, moon: false, system: false });
-      } else if (darkRef.current.contains(e.target) || selectedRefShow == 1) {
+        setSelectedRefShow(selectRef.current.selectedIndex == 0);
+      } else if (darkRef.current.contains(e.target)) {
         setTheme("dark");
         setThemeText({ sun: false, moon: true, system: false });
-      } else if (systemRef.current.contains(e.target) || selectedRefShow == 2) {
+        setSelectedRefShow(selectRef.current.selectedIndex == 1);
+      } else if (systemRef.current.contains(e.target)) {
         setTheme(
           window.matchMedia("prefer-color-scheme: dark").matches
             ? "dark"
             : "light"
         );
         setThemeText({ sun: false, moon: false, system: true });
+        setSelectedRefShow(selectRef.current.selectedIndex == 2);
       }
     };
 
@@ -158,24 +164,39 @@ const Navbar = () => {
   }, [sun, moon, system, selectedRefShow]);
 
   useEffect(() => {
+    if (selectedRefShow === 0) {
+      setTheme("light");
+      setThemeText({ sun: true, moon: false, system: false });
+    } else if (selectedRefShow === 1) {
+      setTheme("dark");
+      setThemeText({ sun: false, moon: true, system: false });
+    } else if (selectedRefShow === 2) {
+      setTheme(
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light"
+      );
+      setThemeText({ sun: false, moon: false, system: true });
+    }
+  }, [selectedRefShow]);
+
+  useEffect(() => {
     if (theme == "dark") {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
     localStorage.setItem("theme", theme);
-  }, [theme]);
-
-  useEffect(() => {
-    localStorage.setItem("theme", theme);
     localStorage.setItem("themeText", JSON.stringify(themeText));
   }, [theme, themeText]);
 
   useEffect(() => {
     selectRef.current.addEventListener("change", () => {
-      setSelectedRefShow(selectRef.current.selectedIndex);
+      setSelectedRefShow(
+        selectRef.current.selectedIndex
+      );
     });
-  });
+  })
 
   return (
     <div className="bg-white w-full border-b-2 border-[#E7E7E9] fixed z-10 dark:bg-black">
@@ -192,8 +213,8 @@ const Navbar = () => {
             />
             <div
               ref={themesRef}
-              className={`flex-col border-2 border-solid w-36 rounded-lg absolute bg-white z-20 top-14 -left-20 shadow-lg ${
-                themesMenu ? "flex" : "hidden"
+              className={`flex-col flex border-2 border-solid w-36 rounded-lg absolute bg-white z-20 top-14 -left-20 shadow-lg ${
+                themesMenu ? "static" : "hidden"
               }`}
             >
               {themeOptions.map(({ img, text, imgBlue }, i) => (
@@ -247,7 +268,7 @@ const Navbar = () => {
           <img src={menuDot} ref={menuRef} className="w-6 ml-4" />
           <div
             className={`absolute top-0 right-0 ${
-              menuShow ? "block" : "hidden"
+              menuShow ? "static" : "hidden"
             }`}
           >
             <div
@@ -284,8 +305,8 @@ const Navbar = () => {
                     >
                       {themeOptions.map((e, i) => (
                         <div
-                          className={`items-center w-full justify-between ${
-                            i != selectedRefShow ? "hidden" : "flex"
+                          className={`items-center w-full justify-between flex ${
+                            i != selectedRefShow ? "hidden" : "static"
                           }`}
                           key={i}
                         >
@@ -308,9 +329,17 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <div ref={searchBlurBgRef} className={`w-screen h-[100vh] bg-black/20 backdrop-blur-sm inset-0 ${searchShow ? 'fixed' : 'hidden'}`}>
+      <div
+        ref={searchBlurBgRef}
+        className={`w-screen h-[100vh] bg-black/20 backdrop-blur-sm inset-0 ${
+          searchShow ? "fixed" : "hidden"
+        }`}
+      >
         <div className="flex justify-center h-full md:mt-16 md:px-32 p-6">
-          <div ref={searchParentRef} className="bg-white w-full lg:w-[750px] h-[500px] rounded-lg">
+          <div
+            ref={searchParentRef}
+            className="bg-white w-full lg:w-[750px] h-[500px] rounded-lg"
+          >
             <header className="flex justify-between items-center pb-3 border-b-[1px] p-4">
               <img src={search} alt="search" className="w-5" />
               <input
@@ -319,7 +348,12 @@ const Navbar = () => {
                 ref={searchInputRef}
                 className="mx-4 w-full text-[15px] flex-1 outline-none focus:border-0 focus:outline-none"
               />
-              <img src={close} alt="close" className="w-5 cursor-pointer" ref={searchCloseRef}/>
+              <img
+                src={close}
+                alt="close"
+                className="w-5 cursor-pointer"
+                ref={searchCloseRef}
+              />
             </header>
             <div className="p-4 pl-5">
               <div className="">

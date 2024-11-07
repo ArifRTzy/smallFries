@@ -2,14 +2,14 @@ import { Link, Outlet } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <div className="pt-[60px] w-full">
-      <div className="w-[90%] mx-auto flex">
-        <div className="w-[20%] max-h-[100vh] overflow-auto fixed">
-          <div className="h-[150vh]">
+    <div className="pt-[60px] bg-white w-full border-[#E7E7E9] dark:bg-black">
+      <div className="w-full px-5 lg:px-10 mx:w-[1444px] mx-auto flex">
+        <div className="w-[20%] max-h-[100vh] overflow-auto lg:block hidden fixed ">
+          <div className="">
             <input type="text" className="border-2" />
           </div>
           <div className="">
-            <li>
+            <li className="">
               <Link to="/">home</Link>
             </li>
             <li>
@@ -17,7 +17,7 @@ const Sidebar = () => {
             </li>
           </div>
         </div>
-        <div className="w-[80%] ml-[25%]">
+        <div className="w-full h-[100vh] lg:pl-[19.5rem]">
           <Outlet />
         </div>
       </div>

@@ -213,8 +213,8 @@ const Navbar = () => {
             />
             <div
               ref={themesRef}
-              className={`flex-col flex border-2 border-solid w-36 rounded-lg absolute bg-white z-20 top-14 -left-20 shadow-lg ${
-                themesMenu ? "static" : "hidden"
+              className={`flex-col border-2 border-solid w-36 rounded-lg absolute bg-white z-20 top-14 -left-20 shadow-lg ${
+                themesMenu ? "flex" : "hidden"
               }`}
             >
               {themeOptions.map(({ img, text, imgBlue }, i) => (
@@ -268,7 +268,7 @@ const Navbar = () => {
           <img src={menuDot} ref={menuRef} className="w-6 ml-4" />
           <div
             className={`absolute top-0 right-0 ${
-              menuShow ? "static" : "hidden"
+              menuShow ? "block" : "hidden"
             }`}
           >
             <div
@@ -305,8 +305,8 @@ const Navbar = () => {
                     >
                       {themeOptions.map((e, i) => (
                         <div
-                          className={`items-center w-full justify-between flex ${
-                            i != selectedRefShow ? "hidden" : "static"
+                          className={`items-center w-full justify-between ${
+                            i != selectedRefShow ? "hidden" : "flex"
                           }`}
                           key={i}
                         >
@@ -331,8 +331,8 @@ const Navbar = () => {
       </div>
       <div
         ref={searchBlurBgRef}
-        className={`w-screen h-[100vh] bg-black/20 backdrop-blur-sm inset-0 ${
-          searchShow ? "fixed" : "hidden"
+        className={`w-screen h-[100vh] fixed bg-black/20 backdrop-blur-sm inset-0 ${
+          searchShow ? "block" : "hidden"
         }`}
       >
         <div className="flex justify-center h-full md:mt-16 md:px-32 p-6">

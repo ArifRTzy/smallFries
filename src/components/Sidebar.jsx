@@ -2,7 +2,7 @@ import { Link, Outlet } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <div className="pt-[60px] bg-white w-full border-[#E7E7E9] dark:bg-black">
+    <div className="pt-[60px] bg-white w-full  dark:bg-black">
       <div className="w-full px-5 lg:px-10 mx:w-[1444px] mx-auto flex">
         <div className="w-[20%] max-h-[100vh] overflow-auto lg:block hidden fixed ">
           <div className="">

@@ -143,10 +143,12 @@ const Navbar = () => {
         setTheme("light");
         setThemeText({ sun: true, moon: false, system: false });
         setSelectedRefShow(selectRef.current.selectedIndex == 0);
+        selectRef.current.selectedIndex[0]
       } else if (darkRef.current.contains(e.target)) {
         setTheme("dark");
         setThemeText({ sun: false, moon: true, system: false });
         setSelectedRefShow(selectRef.current.selectedIndex == 1);
+        selectRef.current.selectedIndex[1]
       } else if (systemRef.current.contains(e.target)) {
         setTheme(
           window.matchMedia("prefer-color-scheme: dark").matches
@@ -155,6 +157,7 @@ const Navbar = () => {
         );
         setThemeText({ sun: false, moon: false, system: true });
         setSelectedRefShow(selectRef.current.selectedIndex == 2);
+        selectRef.current.selectedIndex[2]
       }
     };
 
@@ -163,22 +166,22 @@ const Navbar = () => {
     return () => document.removeEventListener("click", updatedThemes);
   }, [sun, moon, system, selectedRefShow]);
 
-  useEffect(() => {
-    if (selectedRefShow === 0) {
-      setTheme("light");
-      setThemeText({ sun: true, moon: false, system: false });
-    } else if (selectedRefShow === 1) {
-      setTheme("dark");
-      setThemeText({ sun: false, moon: true, system: false });
-    } else if (selectedRefShow === 2) {
-      setTheme(
-        window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light"
-      );
-      setThemeText({ sun: false, moon: false, system: true });
-    }
-  }, [selectedRefShow]);
+  // useEffect(() => {
+  // //   if (selectedRefShow === 0) {
+  // //     setTheme("light");
+  // //     setThemeText({ sun: true, moon: false, system: false });
+  // //   } else if (selectedRefShow === 1) {
+  // //     setTheme("dark");
+  // //     setThemeText({ sun: false, moon: true, system: false });
+  // //   } else if (selectedRefShow === 2) {
+  // //     setTheme(
+  // //       window.matchMedia("(prefers-color-scheme: dark)").matches
+  // //         ? "dark"
+  // //         : "light"
+  // //     );
+  // //     setThemeText({ sun: false, moon: false, system: true });
+  // //   }
+  // // }, [selectedRefShow]);
 
   useEffect(() => {
     if (theme == "dark") {
@@ -199,7 +202,7 @@ const Navbar = () => {
   })
 
   return (
-    <div className="bg-white w-full border-b-2 border-[#E7E7E9] fixed z-10 dark:bg-black">
+    <div className="bg-white w-full border-b-2 border-[#E7E7E9] dark:border-[#64748B] fixed z-10 dark:bg-black">
       <div className="w-full px-5 lg:px-10 mx:w-[1444px] mx-auto flex justify-between py-3 items-center">
         <div className="">
           <p className="text-2xl font-semibold">smallFries</p>
@@ -306,7 +309,7 @@ const Navbar = () => {
                       {themeOptions.map((e, i) => (
                         <div
                           className={`items-center w-full justify-between ${
-                            i != selectedRefShow ? "hidden" : "flex"
+                            (i != selectedRefShow ) ? "hidden" : "flex"
                           }`}
                           key={i}
                         >

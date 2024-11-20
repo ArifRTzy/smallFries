@@ -205,7 +205,7 @@ const Navbar = () => {
     <div className="bg-white w-full border-b-2 border-[#E7E7E9] dark:border-[#64748B] fixed z-10 dark:bg-black">
       <div className="w-full px-5 lg:px-10 mx:w-[1444px] mx-auto flex justify-between py-3 items-center">
         <div className="">
-          <p className="text-2xl font-semibold">smallFries</p>
+          <p className="text-2xl font-semibold">smallFriez</p>
         </div>
         <div className="hidden gap-x-4 lg:flex">
           <div className="relative">

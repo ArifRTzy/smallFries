@@ -138,7 +138,7 @@ const Sidebar = () => {
         </div>
 
         <div className="w-full lg:hidden border-b-2">
-          <div className="flex items-center justify-between w-36 py-3 ">
+          <div className="flex items-center py-3">
             <img ref={sideMenuOpenerRef} className="w-6 mx-4" src={menuList} alt="list" />
             <p className="text-slate-400 mr-2">{menuComponents[bold.group].title}</p>
             <img className="-rotate-90 w-3 mr-2" src={dropdown} alt="arrow" />
@@ -205,7 +205,7 @@ const Sidebar = () => {
             </div>
           </div>
         </div>
-        <div className="w-full h-[100vh] lg:pl-[19.5rem]">
+        <div className="w-full lg:pl-[19.5rem]">
           <Outlet />
         </div>
       </div>

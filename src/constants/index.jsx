@@ -20,7 +20,7 @@ export const menuComponents = [
     title: "Get Started",
     content: [
       { text: "What is this?", link: "/" },
-      { text: "Installation", link: "/comp" },
+      { text: "Installation", link: "/installation" },
     ],
   },
 ];

@@ -3,3 +3,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .comps-h1{
+        @apply text-3xl sm:text-4xl font-bold
+    }
+    .comps-desc{
+        @apply text-lg text-slate-700
+    }
+    .comps-container{
+        @apply w-full lg:py-8 lg:p-0 p-4 sm:p-8 flex flex-col gap-5
+    }
+}

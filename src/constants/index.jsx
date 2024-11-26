@@ -24,3 +24,8 @@ export const menuComponents = [
     ],
   },
 ];
+
+export const installation = [
+  {title : "Install Node.js", url: "https://nodejs.org/en/download/package-manager", text: "nodejs.org"},
+  {title : "Install Vite and Tailwindcss", url: "https://tailwindcss.com/docs/guides/vite", text: "tailwindcss.com"},
+]

@@ -39,7 +39,10 @@ const Navbar = () => {
     }
     return { sun: false, moon: false, system: true };
   });
-  const [selectedRefShow, setSelectedRefShow] = useState(0);
+  const [selectedRefShow, setSelectedRefShow] = useState(() => {
+    const savedSelect = localStorage.getItem("selectedRef");
+    return savedSelect === false || savedSelect === undefined ? 0 : savedSelect;
+  });
   const [menuShow, setMenuShow] = useState(false);
   const [selectedSearchMenu, setSelectedSearchMenu] = useState(0);
   const [searchShow, setSearchShow] = useState(false);
@@ -142,13 +145,13 @@ const Navbar = () => {
       if (lightRef.current.contains(e.target)) {
         setTheme("light");
         setThemeText({ sun: true, moon: false, system: false });
-        setSelectedRefShow(selectRef.current.selectedIndex == 0);
-        selectRef.current.selectedIndex[0]
+        setSelectedRefShow(0);
+        selectRef.current.selectedIndex[0];
       } else if (darkRef.current.contains(e.target)) {
         setTheme("dark");
         setThemeText({ sun: false, moon: true, system: false });
-        setSelectedRefShow(selectRef.current.selectedIndex == 1);
-        selectRef.current.selectedIndex[1]
+        setSelectedRefShow(1);
+        selectRef.current.selectedIndex[1];
       } else if (systemRef.current.contains(e.target)) {
         setTheme(
           window.matchMedia("prefer-color-scheme: dark").matches
@@ -156,8 +159,8 @@ const Navbar = () => {
             : "light"
         );
         setThemeText({ sun: false, moon: false, system: true });
-        setSelectedRefShow(selectRef.current.selectedIndex == 2);
-        selectRef.current.selectedIndex[2]
+        setSelectedRefShow(2);
+        selectRef.current.selectedIndex[2];
       }
     };
 
@@ -166,22 +169,22 @@ const Navbar = () => {
     return () => document.removeEventListener("click", updatedThemes);
   }, [sun, moon, system, selectedRefShow]);
 
-  // useEffect(() => {
-  // //   if (selectedRefShow === 0) {
-  // //     setTheme("light");
-  // //     setThemeText({ sun: true, moon: false, system: false });
-  // //   } else if (selectedRefShow === 1) {
-  // //     setTheme("dark");
-  // //     setThemeText({ sun: false, moon: true, system: false });
-  // //   } else if (selectedRefShow === 2) {
-  // //     setTheme(
-  // //       window.matchMedia("(prefers-color-scheme: dark)").matches
-  // //         ? "dark"
-  // //         : "light"
-  // //     );
-  // //     setThemeText({ sun: false, moon: false, system: true });
-  // //   }
-  // // }, [selectedRefShow]);
+  useEffect(() => {
+    if (selectedRefShow === 0) {
+      setTheme("light");
+      setThemeText({ sun: true, moon: false, system: false });
+    } else if (selectedRefShow === 1) {
+      setTheme("dark");
+      setThemeText({ sun: false, moon: true, system: false });
+    } else if (selectedRefShow === 2) {
+      setTheme(
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light"
+      );
+      setThemeText({ sun: false, moon: false, system: true });
+    }
+  }, [selectedRefShow]);
 
   useEffect(() => {
     if (theme == "dark") {
@@ -191,15 +194,16 @@ const Navbar = () => {
     }
     localStorage.setItem("theme", theme);
     localStorage.setItem("themeText", JSON.stringify(themeText));
-  }, [theme, themeText]);
+    localStorage.setItem("selectedRef", selectedRefShow);
+  }, [theme, themeText, selectedRefShow]);
 
   useEffect(() => {
     selectRef.current.addEventListener("change", () => {
-      setSelectedRefShow(
-        selectRef.current.selectedIndex
-      );
+      setSelectedRefShow(selectRef.current.selectedIndex);
     });
-  })
+    const savedSelect = localStorage.getItem("selectedRef");
+    selectRef.current.selectedIndex = savedSelect;
+  });
 
   return (
     <div className="bg-white w-full border-b-2 border-[#E7E7E9] dark:border-[#64748B] fixed z-10 dark:bg-black">
@@ -222,15 +226,8 @@ const Navbar = () => {
             >
               {themeOptions.map(({ img, text, imgBlue }, i) => (
                 <div
-                  className={`flex px-2.5 cursor-pointer py-1.5 items-center  ${
+                  className={`flex px-2.5 cursor-pointer py-1.5 items-center hover:bg-[#F8FAFC]  ${
                     i === 0 ? "rounded-t-lg" : i == 2 ? "rounded-b-lg" : ""
-                  }
-                  ${
-                    (i === 0 && themeText.sun) ||
-                    (i === 1 && themeText.moon) ||
-                    (i === 2 && themeText.system)
-                      ? "bg-[#F8FAFC]"
-                      : "bg-white hover:bg-[#F8FAFC]"
                   }
                   `}
                   key={i}
@@ -298,9 +295,9 @@ const Navbar = () => {
                       } h-11 opacity-0 absolute`}
                       ref={selectRef}
                     >
-                      <option value="">Light</option>
-                      <option value="">Dark</option>
-                      <option value="">System</option>
+                      <option value="0">Light</option>
+                      <option value="1">Dark</option>
+                      <option value="2">System</option>
                     </select>
                     <div
                       className="border-2 flex items-center h-11 px-2 rounded-lg bg-white"
@@ -309,7 +306,7 @@ const Navbar = () => {
                       {themeOptions.map((e, i) => (
                         <div
                           className={`items-center w-full justify-between ${
-                            (i != selectedRefShow ) ? "hidden" : "flex"
+                            i != selectedRefShow ? "hidden" : "flex"
                           }`}
                           key={i}
                         >

@@ -9,6 +9,8 @@ import {
   light,
   menuDot,
   search,
+  dropdownWhite,
+  codeWhite,
 } from "../utils";
 
 const Navbar = () => {
@@ -44,7 +46,7 @@ const Navbar = () => {
     return savedSelect === false || savedSelect === undefined ? 0 : savedSelect;
   });
   const [menuShow, setMenuShow] = useState(false);
-  const [selectedSearchMenu, setSelectedSearchMenu] = useState(0);
+  const [activeSearchMenu, setActiveSearchMenu] = useState(0);
   const [searchShow, setSearchShow] = useState(false);
   const { sun, moon, system } = themeText;
   const themesRef = useRef(null);
@@ -63,9 +65,15 @@ const Navbar = () => {
   const searchParentRef = useRef(null);
   const searchInputRef = useRef(null);
 
-  if (searchShow) {
-    searchInputRef.current.focus();
-  }
+  const handleHover = (index) => {
+    setActiveSearchMenu(index);
+  };
+
+  useEffect(() => {
+    if (searchShow && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [searchShow]);
 
   useEffect(() => {
     const handleOutsideThemes = (e) => {
@@ -104,10 +112,10 @@ const Navbar = () => {
 
     const handleSelectedSearch = (e) => {
       if (e.key === "ArrowDown") {
-        setSelectedSearchMenu((prev) => (prev + 1) % searchMenu.length);
+        setActiveSearchMenu((prev) => (prev + 1) % searchMenu.length);
       }
       if (e.key === "ArrowUp") {
-        setSelectedSearchMenu((prev) =>
+        setActiveSearchMenu((prev) =>
           prev === 0 ? searchMenu.length - 1 : prev - 1
         );
       }
@@ -343,7 +351,7 @@ const Navbar = () => {
             <header className="flex justify-between items-center pb-3 border-b-[1px] p-4">
               <img src={search} alt="search" className="w-5" />
               <input
-                type="text"
+                type="search"
                 placeholder="Search something"
                 ref={searchInputRef}
                 className="mx-4 w-full text-[15px] flex-1 outline-none focus:border-0 focus:outline-none"
@@ -356,31 +364,44 @@ const Navbar = () => {
               />
             </header>
             <div className="p-4 pl-5">
-              <div className="">
-                <h2 className="text-base font-medium">Navbar</h2>
-                {searchMenu.map((e, i) => (
-                  <div
-                    key={i}
-                    className={`flex justify-between px-3 py-3 rounded-lg items-center group hover:bg-[#0EA5E9] ${
-                      i === selectedSearchMenu ? "bg-[#0EA5E9]" : "bg-[#F8FAFC]"
-                    }`}
-                  >
-                    <img
-                      src={code}
-                      alt="code"
-                      className="w-7 rounded-lg border-2 border-[#EAECEF] bg-white p-1"
-                    />
-                    <p className="flex-1 px-3 text-[#334155] group-hover:text-white">
-                      {e}
-                    </p>
-                    <img
-                      src={dropdown}
-                      alt="dropright"
-                      className="-rotate-90 w-3 cursor-pointer"
-                    />
-                  </div>
-                ))}
-              </div>
+            {searchMenu.map(({ title, content }, i) => (
+                    <div key={i} className="">
+                      <h2 className="text-base font-medium">{title}</h2>
+                      {content.map((e, index)=>(
+                      <div
+                        key={index}
+                        onMouseEnter={() => handleHover(index)}
+                        className={`flex justify-between px-3 py-3 rounded-lg items-center ${
+                          index === activeSearchMenu
+                            ? "bg-[#0EA5E9]"
+                            : "bg-[#F8FAFC]"
+                        }`}
+                      >
+                        <img
+                          src={index === activeSearchMenu ? codeWhite : code}
+                          alt="code"
+                          className={`w-7 rounded-lg border-[1px] border-[#EAECEF] p-1 ${
+                            index === activeSearchMenu ? "bg-[#0EA5E9]" : "bg-white"
+                          }`}
+                        />
+                        <p
+                          className={`flex-1 px-3 text-[#334155] ${
+                            index === activeSearchMenu && "text-white"
+                          }`}
+                        >
+                          {e}
+                        </p>
+                        <img
+                          src={
+                            index === activeSearchMenu ? dropdownWhite : dropdown
+                          }
+                          alt="dropright"
+                          className="-rotate-90 w-3 cursor-pointer"
+                        />
+                      </div>
+                      ))}
+                    </div>
+                  ))}
             </div>
           </div>
         </div>

@@ -13,7 +13,16 @@ export const themeOptions = [
   { img: system, text: "System", imgBlue: systemsBlue },
 ];
 
-export const searchMenu = ["Navbar float", "Navbar fixed", "Navbar sticky"];
+export const searchMenu = [
+  {
+    title: "Navbar",
+    content: ["Navbar fixed", "Navbar Sticky", "Navbar Float"]
+  },
+  {
+    title: "Navbar",
+    content: ["Navbar fixed", "Navbar Sticky", "Navbar Float"]
+  }
+];
 
 export const menuComponents = [
   {

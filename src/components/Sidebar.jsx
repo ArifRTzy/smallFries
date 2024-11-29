@@ -1,42 +1,84 @@
 import { Link, Outlet } from "react-router-dom";
-import { dropdown, menuList, search, code, close } from "../utils";
+import {
+  dropdown,
+  menuList,
+  search,
+  code,
+  close,
+  codeWhite,
+  dropdownWhite,
+} from "../utils";
 import { useEffect, useRef, useState } from "react";
 import { menuComponents, searchMenu } from "../constants";
 
 const Sidebar = () => {
-  const [selectedSearchMenu, setSelectedSearchMenu] = useState(0);
   const [searchShow, setSearchShow] = useState(false);
   const [bold, setBold] = useState({ group: 0, item: 0 });
-  const [sideMenu, setSideMenu] = useState(false)
+  const [sideMenu, setSideMenu] = useState(false);
+  const [activeSearchMenu, setActiveSearchMenu] = useState({group: 0, item: 0});
   const searchRef = useRef(null);
   const searchCloseRef = useRef(null);
   const searchBlurBgRef = useRef(null);
   const searchParentRef = useRef(null);
   const searchInputRef = useRef(null);
-  const sideMenuRef = useRef(null)
-  const sideMenuDivRef = useRef(null)
-  const closeSideMenuRef = useRef(null)
-  const sideMenuOpenerRef = useRef(null)
+  const sideMenuRef = useRef(null);
+  const sideMenuDivRef = useRef(null);
+  const closeSideMenuRef = useRef(null);
+  const sideMenuOpenerRef = useRef(null);
 
-  if (searchShow) {
-    searchInputRef.current.focus();
-  }
+  useEffect(() => {
+    if (searchShow && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [searchShow]);
 
   const handleBold = (groupIndex, itemIndex) => {
     setBold({ group: groupIndex, item: itemIndex });
   };
 
+  const handleHover = (i,index) => {
+    console.log(`Hovered over item ${index} in group ${i}`);
+    setActiveSearchMenu({group: i, item: index});
+  };
+
   useEffect(() => {
     const handleSelectedSearch = (e) => {
+      const { group, item } = activeSearchMenu;
+      const currentGroup = searchMenu[group];
+      
       if (e.key === "ArrowDown") {
-        setSelectedSearchMenu((prev) => (prev + 1) % searchMenu.length);
+        if (item < currentGroup.content.length - 1) {
+          // Move to the next item in the current group
+          setActiveSearchMenu((prev) => ({
+            ...prev,
+            item: item + 1,
+          }));
+        } else if (group < searchMenu.length - 1) {
+          // If we're at the last item in the group, move to the next group
+          setActiveSearchMenu({
+            group: group + 1,
+            item: 0, // Reset item index for the next group
+          });
+        }
       }
+    
       if (e.key === "ArrowUp") {
-        setSelectedSearchMenu((prev) =>
-          prev === 0 ? searchMenu.length - 1 : prev - 1
-        );
+        if (item > 0) {
+          // Move to the previous item in the current group
+          setActiveSearchMenu((prev) => ({
+            ...prev,
+            item: item - 1,
+          }));
+        } else if (group > 0) {
+          // If we're at the first item in the group, move to the previous group
+          setActiveSearchMenu({
+            group: group - 1,
+            item: searchMenu[group - 1].content.length - 1, // Set item to the last item of the previous group
+          });
+        }
       }
     };
+    
 
     const handleSearch = (e) => {
       if (searchRef.current.contains(e.target)) {
@@ -50,13 +92,17 @@ const Sidebar = () => {
       }
     };
 
-    const handleSideMenu = (e)=>{
-      if(sideMenuRef.current.contains(e.target) && !sideMenuDivRef.current.contains(e.target) || closeSideMenuRef.current.contains(e.target)){
-        setSideMenu((prev)=>!prev)
-      }else if(sideMenuOpenerRef.current.contains(e.target)){
-        setSideMenu((prev)=>!prev)
+    const handleSideMenu = (e) => {
+      if (
+        (sideMenuRef.current.contains(e.target) &&
+          !sideMenuDivRef.current.contains(e.target)) ||
+        closeSideMenuRef.current.contains(e.target)
+      ) {
+        setSideMenu((prev) => !prev);
+      } else if (sideMenuOpenerRef.current.contains(e.target)) {
+        setSideMenu((prev) => !prev);
       }
-    }
+    };
 
     document.addEventListener("keydown", handleSelectedSearch);
     document.addEventListener("click", handleSearch);
@@ -107,8 +153,16 @@ const Sidebar = () => {
           </div>
         </div>
 
-        <div ref={sideMenuRef} className={`w-full lg:hidden fixed z-10 inset-0 max-h-[100vh] overflow-auto bg-black/20 backdrop-blur-sm ${sideMenu ? 'block' : 'hidden'}`}>
-          <div ref={sideMenuDivRef} className="absolute bg-white w-80 max-w-[calc(100%-3rem)] h-[150vh] p-6 flex justify-between">
+        <div
+          ref={sideMenuRef}
+          className={`w-full lg:hidden fixed z-10 inset-0 max-h-[100vh] overflow-auto bg-black/20 backdrop-blur-sm ${
+            sideMenu ? "block" : "hidden"
+          }`}
+        >
+          <div
+            ref={sideMenuDivRef}
+            className="absolute bg-white w-80 max-w-[calc(100%-3rem)] h-[150vh] p-6 flex justify-between"
+          >
             <div className="">
               {menuComponents.map(({ title, content }, i) => (
                 <div key={i} className="">
@@ -132,15 +186,27 @@ const Sidebar = () => {
               ))}
             </div>
             <div className="">
-              <img ref={closeSideMenuRef} src={close} alt="close" className="w-5" />
+              <img
+                ref={closeSideMenuRef}
+                src={close}
+                alt="close"
+                className="w-5"
+              />
             </div>
           </div>
         </div>
 
         <div className="w-full lg:hidden border-b-2">
           <div className="flex items-center py-3">
-            <img ref={sideMenuOpenerRef} className="w-6 mx-4" src={menuList} alt="list" />
-            <p className="text-slate-400 mr-2">{menuComponents[bold.group].title}</p>
+            <img
+              ref={sideMenuOpenerRef}
+              className="w-6 mx-4"
+              src={menuList}
+              alt="list"
+            />
+            <p className="text-slate-400 mr-2">
+              {menuComponents[bold.group].title}
+            </p>
             <img className="-rotate-90 w-3 mr-2" src={dropdown} alt="arrow" />
             <p className="font-semibold">
               {menuComponents[bold.group].content[bold.item].text}
@@ -174,33 +240,44 @@ const Sidebar = () => {
                 />
               </header>
               <div className="p-4 pl-5">
-                <div className="">
-                  <h2 className="text-base font-medium">Navbar</h2>
-                  {searchMenu.map((e, i) => (
-                    <div
-                      key={i}
-                      className={`flex justify-between px-3 py-3 rounded-lg items-center group hover:bg-[#0EA5E9] ${
-                        i === selectedSearchMenu
-                          ? "bg-[#0EA5E9]"
-                          : "bg-[#F8FAFC]"
-                      }`}
-                    >
-                      <img
-                        src={code}
-                        alt="code"
-                        className="w-7 rounded-lg border-2 border-[#EAECEF] bg-white p-1"
-                      />
-                      <p className="flex-1 px-3 text-[#334155] group-hover:text-white">
-                        {e}
-                      </p>
-                      <img
-                        src={dropdown}
-                        alt="dropright"
-                        className="-rotate-90 w-3 cursor-pointer"
-                      />
+                  {searchMenu.map(({ title, content }, i) => (
+                    <div key={i} className="">
+                      <h2 className="text-base font-medium">{title}</h2>
+                      {content.map((e, index)=>(
+                      <div
+                        key={index}
+                        onMouseEnter={() => handleHover(i, index)}
+                        className={`flex justify-between px-3 py-3 rounded-lg items-center cursor-pointer ${
+                          index === activeSearchMenu.item && i === activeSearchMenu.group
+                            ? "bg-[#0EA5E9]"
+                            : "bg-[#F8FAFC]"
+                        }`}
+                      >
+                        <img
+                          src={index === activeSearchMenu.item && i === activeSearchMenu.group ? codeWhite : code}
+                          alt="code"
+                          className={`w-7 rounded-lg border-[1px] border-[#EAECEF] p-1 ${
+                            index === activeSearchMenu.item && i === activeSearchMenu.group ? "bg-[#0EA5E9]" : "bg-white"
+                          }`}
+                        />
+                        <p
+                          className={`flex-1 px-3 text-[#334155] ${
+                            index === activeSearchMenu.item && i === activeSearchMenu.group && "text-white"
+                          }`}
+                        >
+                          {e}
+                        </p>
+                        <img
+                          src={
+                            index === activeSearchMenu.item && i === activeSearchMenu.group ? dropdownWhite : dropdown
+                          }
+                          alt="dropright"
+                          className="-rotate-90 w-3 cursor-pointer"
+                        />
+                      </div>
+                      ))}
                     </div>
                   ))}
-                </div>
               </div>
             </div>
           </div>

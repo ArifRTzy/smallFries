@@ -10,7 +10,9 @@ import darksBlues from "/images/moon-blue.svg"
 import systemsBlues from "/images/pc-blue.svg"
 import closes from "/images/close.svg"
 import dropdowns from "/images/caret-down.svg"
+import dropdownsWhite from "/images/caret-down-white.svg"
 import codes from "/images/code.svg"
+import codesWhite from "/images/code-white.svg"
 import cats from "/images/cat.jpg"
 import catGifs from "/images/happy-cat.gif"
 
@@ -26,6 +28,8 @@ export const darksBlue = darksBlues
 export const systemsBlue = systemsBlues
 export const close = closes
 export const dropdown = dropdowns
+export const dropdownWhite = dropdownsWhite
 export const code = codes
+export const codeWhite = codesWhite
 export const cat = cats
 export const catGif = catGifs

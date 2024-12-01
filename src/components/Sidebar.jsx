@@ -15,7 +15,12 @@ const Sidebar = () => {
   const [searchShow, setSearchShow] = useState(false);
   const [bold, setBold] = useState({ group: 0, item: 0 });
   const [sideMenu, setSideMenu] = useState(false);
-  const [activeSearchMenu, setActiveSearchMenu] = useState({group: 0, item: 0});
+  const [activeSearchMenu, setActiveSearchMenu] = useState({
+    group: 0,
+    item: 0,
+  });
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredMenu, setFilteredMenu] = useState(searchMenu);
   const searchRef = useRef(null);
   const searchCloseRef = useRef(null);
   const searchBlurBgRef = useRef(null);
@@ -36,49 +41,78 @@ const Sidebar = () => {
     setBold({ group: groupIndex, item: itemIndex });
   };
 
-  const handleHover = (i,index) => {
-    console.log(`Hovered over item ${index} in group ${i}`);
-    setActiveSearchMenu({group: i, item: index});
+  const handleHover = (i, index) => {
+    setActiveSearchMenu({ group: i, item: index });
+  };
+
+  const handleSearchInput = (e) => {
+    const query = e.target.value.toLowerCase(); // Normalize input
+    setSearchQuery(query);
+  
+    // Split the query into words
+    const queryWords = query.split(/\s+/).filter(Boolean); // Split by spaces and remove empty strings
+  
+    const filtered = searchMenu.map((group) => ({
+      ...group,
+      content: group.content.filter((item) => {
+        // Split the item's content into words
+        const itemWords = item.toLowerCase().split(/\s+/);
+  
+        // Check if every query word matches any word in the item's content partially
+        return queryWords.every((queryWord) =>
+          itemWords.some((itemWord) => itemWord.includes(queryWord)) // Check for partial match
+        );
+      }),
+    })).filter((group) => group.content.length > 0); // Remove empty groups
+  
+    setFilteredMenu(filtered);
   };
 
   useEffect(() => {
     const handleSelectedSearch = (e) => {
       const { group, item } = activeSearchMenu;
-      const currentGroup = searchMenu[group];
-      
+      const currentGroup = filteredMenu[group];
+    
+      if (!currentGroup) return; // Handle edge cases with no results
+    
       if (e.key === "ArrowDown") {
         if (item < currentGroup.content.length - 1) {
-          // Move to the next item in the current group
           setActiveSearchMenu((prev) => ({
             ...prev,
             item: item + 1,
           }));
-        } else if (group < searchMenu.length - 1) {
-          // If we're at the last item in the group, move to the next group
+        } else if (group < filteredMenu.length - 1) {
           setActiveSearchMenu({
             group: group + 1,
-            item: 0, // Reset item index for the next group
+            item: 0,
+          });
+        } else {
+          setActiveSearchMenu({
+            group: 0,
+            item: 0,
           });
         }
       }
     
       if (e.key === "ArrowUp") {
         if (item > 0) {
-          // Move to the previous item in the current group
           setActiveSearchMenu((prev) => ({
             ...prev,
             item: item - 1,
           }));
         } else if (group > 0) {
-          // If we're at the first item in the group, move to the previous group
           setActiveSearchMenu({
             group: group - 1,
-            item: searchMenu[group - 1].content.length - 1, // Set item to the last item of the previous group
+            item: filteredMenu[group - 1].content.length - 1,
+          });
+        } else {
+          setActiveSearchMenu({
+            group: filteredMenu.length - 1,
+            item: filteredMenu[filteredMenu.length - 1].content.length - 1,
           });
         }
       }
-    };
-    
+    };    
 
     const handleSearch = (e) => {
       if (searchRef.current.contains(e.target)) {
@@ -230,6 +264,8 @@ const Sidebar = () => {
                   type="text"
                   placeholder="Search something"
                   ref={searchInputRef}
+                  value={searchQuery}
+                  onChange={handleSearchInput}
                   className="mx-4 w-full text-[15px] flex-1 outline-none focus:border-0 focus:outline-none"
                 />
                 <img
@@ -240,44 +276,58 @@ const Sidebar = () => {
                 />
               </header>
               <div className="p-4 pl-5">
-                  {searchMenu.map(({ title, content }, i) => (
-                    <div key={i} className="">
-                      <h2 className="text-base font-medium">{title}</h2>
-                      {content.map((e, index)=>(
+                {filteredMenu.map(({ title, content }, i) => (
+                  <div key={i} className="">
+                    <h2 className="text-base font-medium">{title}</h2>
+                    {content.map((e, index) => (
                       <div
                         key={index}
                         onMouseEnter={() => handleHover(i, index)}
                         className={`flex justify-between px-3 py-3 rounded-lg items-center cursor-pointer ${
-                          index === activeSearchMenu.item && i === activeSearchMenu.group
+                          index === activeSearchMenu.item &&
+                          i === activeSearchMenu.group
                             ? "bg-[#0EA5E9]"
                             : "bg-[#F8FAFC]"
                         }`}
                       >
                         <img
-                          src={index === activeSearchMenu.item && i === activeSearchMenu.group ? codeWhite : code}
+                          src={
+                            index === activeSearchMenu.item &&
+                            i === activeSearchMenu.group
+                              ? codeWhite
+                              : code
+                          }
                           alt="code"
                           className={`w-7 rounded-lg border-[1px] border-[#EAECEF] p-1 ${
-                            index === activeSearchMenu.item && i === activeSearchMenu.group ? "bg-[#0EA5E9]" : "bg-white"
+                            index === activeSearchMenu.item &&
+                            i === activeSearchMenu.group
+                              ? "bg-[#0EA5E9]"
+                              : "bg-white"
                           }`}
                         />
                         <p
                           className={`flex-1 px-3 text-[#334155] ${
-                            index === activeSearchMenu.item && i === activeSearchMenu.group && "text-white"
+                            index === activeSearchMenu.item &&
+                            i === activeSearchMenu.group &&
+                            "text-white"
                           }`}
                         >
                           {e}
                         </p>
                         <img
                           src={
-                            index === activeSearchMenu.item && i === activeSearchMenu.group ? dropdownWhite : dropdown
+                            index === activeSearchMenu.item &&
+                            i === activeSearchMenu.group
+                              ? dropdownWhite
+                              : dropdown
                           }
                           alt="dropright"
                           className="-rotate-90 w-3 cursor-pointer"
                         />
                       </div>
-                      ))}
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                ))}
               </div>
             </div>
           </div>

@@ -9,7 +9,7 @@ import {
   dropdownWhite,
 } from "../utils";
 import { useEffect, useRef, useState } from "react";
-import { menuComponents, searchMenu } from "../constants";
+import { menuComponents } from "../constants";
 
 const Sidebar = () => {
   const [searchShow, setSearchShow] = useState(false);
@@ -20,7 +20,7 @@ const Sidebar = () => {
     item: 0,
   });
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredMenu, setFilteredMenu] = useState(searchMenu);
+  const [filteredMenu, setFilteredMenu] = useState(menuComponents);
   const searchRef = useRef(null);
   const searchCloseRef = useRef(null);
   const searchBlurBgRef = useRef(null);
@@ -48,33 +48,41 @@ const Sidebar = () => {
   const handleSearchInput = (e) => {
     const query = e.target.value.toLowerCase(); // Normalize input
     setSearchQuery(query);
-  
+    setActiveSearchMenu({ group: 0, item: 0 });
+
     // Split the query into words
     const queryWords = query.split(/\s+/).filter(Boolean); // Split by spaces and remove empty strings
-  
-    const filtered = searchMenu.map((group) => ({
-      ...group,
-      content: group.content.filter((item) => {
-        // Split the item's content into words
-        const itemWords = item.toLowerCase().split(/\s+/);
-  
-        // Check if every query word matches any word in the item's content partially
-        return queryWords.every((queryWord) =>
-          itemWords.some((itemWord) => itemWord.includes(queryWord)) // Check for partial match
-        );
-      }),
-    })).filter((group) => group.content.length > 0); // Remove empty groups
-  
+
+    const filtered = menuComponents
+      .map((group) => ({
+        ...group,
+        content: group.content.filter((item) => {
+          // Split the item's content into words
+          const itemWords = item.text.toLowerCase().split(/\s+/);
+
+          // Check if every query word matches any word in the item's content partially
+          return queryWords.every(
+            (queryWord) =>
+              itemWords.some((itemWord) => itemWord.includes(queryWord)) // Check for partial match
+          );
+        }),
+      }))
+      .filter((group) => group.content.length > 0); // Remove empty groups
+
     setFilteredMenu(filtered);
   };
+
+  const handleSearchVisibility = ()=>{
+    setSearchShow(false)
+  }
 
   useEffect(() => {
     const handleSelectedSearch = (e) => {
       const { group, item } = activeSearchMenu;
       const currentGroup = filteredMenu[group];
-    
+
       if (!currentGroup) return; // Handle edge cases with no results
-    
+
       if (e.key === "ArrowDown") {
         if (item < currentGroup.content.length - 1) {
           setActiveSearchMenu((prev) => ({
@@ -93,7 +101,7 @@ const Sidebar = () => {
           });
         }
       }
-    
+
       if (e.key === "ArrowUp") {
         if (item > 0) {
           setActiveSearchMenu((prev) => ({
@@ -112,7 +120,7 @@ const Sidebar = () => {
           });
         }
       }
-    };    
+    };
 
     const handleSearch = (e) => {
       if (searchRef.current.contains(e.target)) {
@@ -276,58 +284,67 @@ const Sidebar = () => {
                 />
               </header>
               <div className="p-4 pl-5">
-                {filteredMenu.map(({ title, content }, i) => (
-                  <div key={i} className="">
-                    <h2 className="text-base font-medium">{title}</h2>
-                    {content.map((e, index) => (
-                      <div
-                        key={index}
-                        onMouseEnter={() => handleHover(i, index)}
-                        className={`flex justify-between px-3 py-3 rounded-lg items-center cursor-pointer ${
-                          index === activeSearchMenu.item &&
-                          i === activeSearchMenu.group
-                            ? "bg-[#0EA5E9]"
-                            : "bg-[#F8FAFC]"
-                        }`}
-                      >
-                        <img
-                          src={
-                            index === activeSearchMenu.item &&
-                            i === activeSearchMenu.group
-                              ? codeWhite
-                              : code
-                          }
-                          alt="code"
-                          className={`w-7 rounded-lg border-[1px] border-[#EAECEF] p-1 ${
-                            index === activeSearchMenu.item &&
-                            i === activeSearchMenu.group
-                              ? "bg-[#0EA5E9]"
-                              : "bg-white"
-                          }`}
-                        />
-                        <p
-                          className={`flex-1 px-3 text-[#334155] ${
-                            index === activeSearchMenu.item &&
-                            i === activeSearchMenu.group &&
-                            "text-white"
-                          }`}
-                        >
-                          {e}
-                        </p>
-                        <img
-                          src={
-                            index === activeSearchMenu.item &&
-                            i === activeSearchMenu.group
-                              ? dropdownWhite
-                              : dropdown
-                          }
-                          alt="dropright"
-                          className="-rotate-90 w-3 cursor-pointer"
-                        />
+                {filteredMenu.length === 0 ? (
+                  // Display this when no results are found
+                  <p className="text-gray-500 mt-4 flex justify-center">No results found.</p>
+                ) : (
+                  <div className="">
+                    {filteredMenu.map(({ title, content }, i) => (
+                      <div key={i} className="">
+                        <h2 className="text-base font-medium">{title}</h2>
+                        {content.map(({text, link}, index) => (
+                          <Link
+                            key={index}
+                            to={link}
+                            onMouseEnter={() => handleHover(i, index)}
+                            onClick={handleSearchVisibility}
+                            className={`flex justify-between px-3 py-3 rounded-lg items-center cursor-pointer ${
+                              index === activeSearchMenu.item &&
+                              i === activeSearchMenu.group
+                                ? "bg-[#0EA5E9]"
+                                : "bg-[#F8FAFC]"
+                            }`}
+                          >
+                            <img
+                              src={
+                                index === activeSearchMenu.item &&
+                                i === activeSearchMenu.group
+                                  ? codeWhite
+                                  : code
+                              }
+                              alt="code"
+                              className={`w-7 rounded-lg border-[1px] border-[#EAECEF] p-1 ${
+                                index === activeSearchMenu.item &&
+                                i === activeSearchMenu.group
+                                  ? "bg-[#0EA5E9]"
+                                  : "bg-white"
+                              }`}
+                            />
+                            <p
+                              className={`flex-1 px-3 text-[#334155] ${
+                                index === activeSearchMenu.item &&
+                                i === activeSearchMenu.group &&
+                                "text-white"
+                              }`}
+                            >
+                              {text}
+                            </p>
+                            <img
+                              src={
+                                index === activeSearchMenu.item &&
+                                i === activeSearchMenu.group
+                                  ? dropdownWhite
+                                  : dropdown
+                              }
+                              alt="dropright"
+                              className="-rotate-90 w-3 cursor-pointer"
+                            />
+                          </Link>
+                        ))}
                       </div>
                     ))}
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </div>

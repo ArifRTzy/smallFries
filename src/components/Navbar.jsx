@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { searchMenu, themeOptions } from "../constants";
+import { Link } from "react-router-dom";
+import { menuComponents, themeOptions } from "../constants";
 import {
   close,
   code,
@@ -48,6 +49,8 @@ const Navbar = () => {
   const [menuShow, setMenuShow] = useState(false);
   const [activeSearchMenu, setActiveSearchMenu] = useState({group: 0, item: 0});
   const [searchShow, setSearchShow] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredMenu, setFilteredMenu] = useState(menuComponents);
   const { sun, moon, system } = themeText;
   const themesRef = useRef(null);
   const sunRef = useRef(null);
@@ -69,6 +72,37 @@ const Navbar = () => {
     setActiveSearchMenu({group: i, item: index});
   };
 
+  const handleSearchInput = (e) => {
+    const query = e.target.value.toLowerCase(); // Normalize input
+    setSearchQuery(query);
+    setActiveSearchMenu({ group: 0, item: 0 });
+
+    // Split the query into words
+    const queryWords = query.split(/\s+/).filter(Boolean); // Split by spaces and remove empty strings
+
+    const filtered = menuComponents
+      .map((group) => ({
+        ...group,
+        content: group.content.filter((item) => {
+          // Split the item's content into words
+          const itemWords = item.text.toLowerCase().split(/\s+/);
+
+          // Check if every query word matches any word in the item's content partially
+          return queryWords.every(
+            (queryWord) =>
+              itemWords.some((itemWord) => itemWord.includes(queryWord)) // Check for partial match
+          );
+        }),
+      }))
+      .filter((group) => group.content.length > 0); // Remove empty groups
+
+    setFilteredMenu(filtered);
+  };
+
+  const handleSearchVisibility = ()=>{
+    setSearchShow(false)
+  }
+
   useEffect(() => {
     if (searchShow && searchInputRef.current) {
       searchInputRef.current.focus();
@@ -78,48 +112,44 @@ const Navbar = () => {
   useEffect(() => {
     const handleSelectedSearch = (e) => {
       const { group, item } = activeSearchMenu;
-      const currentGroup = searchMenu[group];
-      
+      const currentGroup = filteredMenu[group];
+
+      if (!currentGroup) return; // Handle edge cases with no results
+
       if (e.key === "ArrowDown") {
         if (item < currentGroup.content.length - 1) {
-          // Move to the next item in the current group
           setActiveSearchMenu((prev) => ({
             ...prev,
             item: item + 1,
           }));
-        } else if (group < searchMenu.length - 1) {
-          // If we're at the last item in the group, move to the next group
-            setActiveSearchMenu({
-              group: group + 1,
-              item: 0, // Reset item index for the next group
-            });
-        }else {
-          // Wrap around to the first group and item
+        } else if (group < filteredMenu.length - 1) {
+          setActiveSearchMenu({
+            group: group + 1,
+            item: 0,
+          });
+        } else {
           setActiveSearchMenu({
             group: 0,
             item: 0,
           });
         }
       }
-    
+
       if (e.key === "ArrowUp") {
         if (item > 0) {
-          // Move to the previous item in the current group
           setActiveSearchMenu((prev) => ({
             ...prev,
             item: item - 1,
           }));
         } else if (group > 0) {
-          // If we're at the first item in the group, move to the previous group
           setActiveSearchMenu({
             group: group - 1,
-            item: searchMenu[group - 1].content.length - 1, // Set item to the last item of the previous group
+            item: filteredMenu[group - 1].content.length - 1,
           });
-        }else{
-          // Wrap around to the last group and item
+        } else {
           setActiveSearchMenu({
-            group: searchMenu.length - 1,
-            item: searchMenu[searchMenu.length - 1].content.length - 1,
+            group: filteredMenu.length - 1,
+            item: filteredMenu[filteredMenu.length - 1].content.length - 1,
           });
         }
       }
@@ -184,7 +214,7 @@ const Navbar = () => {
       document.removeEventListener("keydown", handleSelectedSearch);
       document.removeEventListener("click", handleSearch);
     };
-  }, [themesMenu, activeSearchMenu]);
+  }, [themesMenu, activeSearchMenu, filteredMenu]);
 
   useEffect(() => {
     const updatedThemes = (e) => {
@@ -392,6 +422,8 @@ const Navbar = () => {
                 type="search"
                 placeholder="Search something"
                 ref={searchInputRef}
+                value={searchQuery}
+                onChange={handleSearchInput}
                 className="mx-4 w-full text-[15px] flex-1 outline-none focus:border-0 focus:outline-none"
               />
               <img
@@ -402,44 +434,67 @@ const Navbar = () => {
               />
             </header>
             <div className="p-4 pl-5">
-            {searchMenu.map(({ title, content }, i) => (
-                    <div key={i} className="">
-                      <h2 className="text-base font-medium">{title}</h2>
-                      {content.map((e, index)=>(
-                      <div
-                        key={index}
-                        onMouseEnter={() => handleHover(i, index)}
-                        className={`flex justify-between px-3 py-3 rounded-lg items-center cursor-pointer ${
-                          index === activeSearchMenu.item && i === activeSearchMenu.group
-                            ? "bg-[#0EA5E9]"
-                            : "bg-[#F8FAFC]"
-                        }`}
-                      >
-                        <img
-                          src={index === activeSearchMenu.item && i === activeSearchMenu.group ? codeWhite : code}
-                          alt="code"
-                          className={`w-7 rounded-lg border-[1px] border-[#EAECEF] p-1 ${
-                            index === activeSearchMenu.item && i === activeSearchMenu.group ? "bg-[#0EA5E9]" : "bg-white"
-                          }`}
-                        />
-                        <p
-                          className={`flex-1 px-3 text-[#334155] ${
-                            index === activeSearchMenu.item && i === activeSearchMenu.group && "text-white"
-                          }`}
-                        >
-                          {e}
-                        </p>
-                        <img
-                          src={
-                            index === activeSearchMenu.item && i === activeSearchMenu.group ? dropdownWhite : dropdown
-                          }
-                          alt="dropright"
-                          className="-rotate-90 w-3 cursor-pointer"
-                        />
+            {filteredMenu.length === 0 ? (
+                  // Display this when no results are found
+                  <p className="text-gray-500 mt-4 flex justify-center">No results found.</p>
+                ) : (
+                  <div className="">
+                    {filteredMenu.map(({ title, content }, i) => (
+                      <div key={i} className="">
+                        <h2 className="text-base font-medium">{title}</h2>
+                        {content.map(({text, link}, index) => (
+                          <Link
+                            key={index}
+                            to={link}
+                            onMouseEnter={() => handleHover(i, index)}
+                            onClick={handleSearchVisibility}
+                            className={`flex justify-between px-3 py-3 rounded-lg items-center cursor-pointer ${
+                              index === activeSearchMenu.item &&
+                              i === activeSearchMenu.group
+                                ? "bg-[#0EA5E9]"
+                                : "bg-[#F8FAFC]"
+                            }`}
+                          >
+                            <img
+                              src={
+                                index === activeSearchMenu.item &&
+                                i === activeSearchMenu.group
+                                  ? codeWhite
+                                  : code
+                              }
+                              alt="code"
+                              className={`w-7 rounded-lg border-[1px] border-[#EAECEF] p-1 ${
+                                index === activeSearchMenu.item &&
+                                i === activeSearchMenu.group
+                                  ? "bg-[#0EA5E9]"
+                                  : "bg-white"
+                              }`}
+                            />
+                            <p
+                              className={`flex-1 px-3 text-[#334155] ${
+                                index === activeSearchMenu.item &&
+                                i === activeSearchMenu.group &&
+                                "text-white"
+                              }`}
+                            >
+                              {text}
+                            </p>
+                            <img
+                              src={
+                                index === activeSearchMenu.item &&
+                                i === activeSearchMenu.group
+                                  ? dropdownWhite
+                                  : dropdown
+                              }
+                              alt="dropright"
+                              className="-rotate-90 w-3 cursor-pointer"
+                            />
+                          </Link>
+                        ))}
                       </div>
-                      ))}
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                )}
             </div>
           </div>
         </div>

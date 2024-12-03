@@ -1,5 +1,5 @@
-import FooterComps from "./FooterComps";
-import { installation, menuComponents } from "../../constants";
+import FooterComps from "../FooterComps";
+import { installation, menuComponents } from "../../../constants";
 
 const Installation = () => {
   return (

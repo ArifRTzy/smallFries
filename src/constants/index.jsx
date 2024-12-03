@@ -19,7 +19,12 @@ export const menuComponents = [
     content: [
       { text: "What is this?", link: "/" },
       { text: "Installation", link: "/installation" },
-      { text: "Installation", link: "/installation" },
+    ],
+  },
+  {
+    title: "Navbar",
+    content: [
+      { text: "Navbar Float", link: "/navbar-float" },
     ],
   },
 ];

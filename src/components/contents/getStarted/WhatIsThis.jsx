@@ -1,6 +1,6 @@
-import { menuComponents } from "../../constants";
-import { cat, catGif } from "../../utils";
-import FooterComps from "./FooterComps";
+import { menuComponents } from "../../../constants";
+import { cat, catGif } from "../../../utils";
+import FooterComps from "../FooterComps";
 
 const WhatIsThis = () => {
   return (

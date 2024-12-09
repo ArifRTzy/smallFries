@@ -16,7 +16,10 @@ import codesWhite from "/images/code-white.svg";
 import cats from "/images/cat.jpg";
 import catGifs from "/images/happy-cat.gif";
 import laptops from "/images/laptop.svg";
+import laptopsUnclick from "/images/laptop-unclick.svg";
 import phones from "/images/phone.svg";
+import phonesUnclick from "/images/phone-unclick.svg"
+import copies from "/images/copy.svg"
 
 export const menuDot = menuDots;
 export const menuList = menuLists;
@@ -37,3 +40,6 @@ export const cat = cats;
 export const catGif = catGifs;
 export const laptop = laptops;
 export const phone = phones;
+export const laptopUnclick = laptopsUnclick
+export const phoneUnclick = phonesUnclick
+export const copy = copies

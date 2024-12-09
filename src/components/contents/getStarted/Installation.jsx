@@ -7,7 +7,7 @@ const Installation = () => {
       <p className="font-semibold text-slate-600">{menuComponents[0].title}</p>
       <h1 className="comps-h1">Installation</h1>
       <p className="comps-desc">
-        Before you use components, you need to install these things.
+        Before you can use the components, you need to install these things.
       </p>
       <div className="w-full py-5">
         <div className="border-l-[1px] outline-none border-slate-300 flex flex-col gap-y-6">

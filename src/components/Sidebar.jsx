@@ -13,7 +13,11 @@ import { menuComponents } from "../constants";
 
 const Sidebar = () => {
   const [searchShow, setSearchShow] = useState(false);
-  const [bold, setBold] = useState({ group: 0, item: 0 });
+  const [bold, setBold] = useState(() => {
+    const savedCon = localStorage.getItem("liActive");
+    if (savedCon) return JSON.parse(savedCon);
+    return { group: 0, item: 0 };
+  });
   const [sideMenu, setSideMenu] = useState(false);
   const [activeSearchMenu, setActiveSearchMenu] = useState({
     group: 0,
@@ -72,9 +76,9 @@ const Sidebar = () => {
     setFilteredMenu(filtered);
   };
 
-  const handleSearchVisibility = ()=>{
-    setSearchShow(false)
-  }
+  const handleSearchVisibility = () => {
+    setSearchShow(false);
+  };
 
   useEffect(() => {
     const handleSelectedSearch = (e) => {
@@ -145,6 +149,8 @@ const Sidebar = () => {
         setSideMenu((prev) => !prev);
       }
     };
+
+    localStorage.setItem("liActive", JSON.stringify(bold));
 
     document.addEventListener("keydown", handleSelectedSearch);
     document.addEventListener("click", handleSearch);
@@ -286,13 +292,15 @@ const Sidebar = () => {
               <div className="p-4 pl-5">
                 {filteredMenu.length === 0 ? (
                   // Display this when no results are found
-                  <p className="text-gray-500 mt-4 flex justify-center">No results found.</p>
+                  <p className="text-gray-500 mt-4 flex justify-center">
+                    No results found.
+                  </p>
                 ) : (
                   <div className="">
                     {filteredMenu.map(({ title, content }, i) => (
                       <div key={i} className="">
                         <h2 className="text-base font-medium">{title}</h2>
-                        {content.map(({text, link}, index) => (
+                        {content.map(({ text, link }, index) => (
                           <Link
                             key={index}
                             to={link}

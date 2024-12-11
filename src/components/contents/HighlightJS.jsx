@@ -1,9 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, forwardRef } from "react";
 import PropTypes from "prop-types";
 import hljs from "highlight.js";
 import "highlight.js/styles/github-dark.css"; // Choose any theme
 
-const CodeHighlighter = ({ code, language = "javascript", className = "" }) => {
+const CodeHighlighter = forwardRef(({ code, language = "javascript", className = "" }, ref) => {
   const codeRef = useRef(null);
 
   useEffect(() => {
@@ -13,13 +13,16 @@ const CodeHighlighter = ({ code, language = "javascript", className = "" }) => {
   }, []);
 
   return (
-    <pre className={className}>
+    <pre ref={ref} className={className}>
       <code ref={codeRef} className={language}>
         {code}
       </code>
     </pre>
   );
-};
+});
+
+CodeHighlighter.displayName = "CodeHighlighter";
+
 
 // Define prop types for the component
 CodeHighlighter.propTypes = {

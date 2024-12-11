@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import {
   dropdown,
   menuList,
@@ -13,11 +13,6 @@ import { menuComponents } from "../constants";
 
 const Sidebar = () => {
   const [searchShow, setSearchShow] = useState(false);
-  const [bold, setBold] = useState(() => {
-    const savedCon = localStorage.getItem("liActive");
-    if (savedCon) return JSON.parse(savedCon);
-    return { group: 0, item: 0 };
-  });
   const [sideMenu, setSideMenu] = useState(false);
   const [activeSearchMenu, setActiveSearchMenu] = useState({
     group: 0,
@@ -34,16 +29,17 @@ const Sidebar = () => {
   const sideMenuDivRef = useRef(null);
   const closeSideMenuRef = useRef(null);
   const sideMenuOpenerRef = useRef(null);
+  const location = useLocation()
+  const allItems = menuComponents.flatMap((menu) => menu.content).filter(({link}) => link === location.pathname);
+  const activeComponentTitle = menuComponents.find(
+    (menu) => menu.content.some((item) => item.link === location.pathname)
+  )?.title
 
   useEffect(() => {
     if (searchShow && searchInputRef.current) {
       searchInputRef.current.focus();
     }
   }, [searchShow]);
-
-  const handleBold = (groupIndex, itemIndex) => {
-    setBold({ group: groupIndex, item: itemIndex });
-  };
 
   const handleHover = (i, index) => {
     setActiveSearchMenu({ group: i, item: index });
@@ -150,14 +146,21 @@ const Sidebar = () => {
       }
     };
 
-    localStorage.setItem("liActive", JSON.stringify(bold));
+    const handleSearchShortCut = (e)=>{
+      if((e.ctrlKey || e.metaKey) && e.key === 'k'){
+        e.preventDefault()
+        setSearchShow((prev)=>!prev)
+      }
+    }
 
     document.addEventListener("keydown", handleSelectedSearch);
+    document.addEventListener("keydown", handleSearchShortCut);
     document.addEventListener("click", handleSearch);
     document.addEventListener("click", handleSideMenu);
 
     return () => {
       document.removeEventListener("keydown", handleSelectedSearch);
+      document.removeEventListener("keydown", handleSearchShortCut);
       document.removeEventListener("click", handleSearch);
       document.removeEventListener("click", handleSideMenu);
     };
@@ -184,9 +187,8 @@ const Sidebar = () => {
                 {content.map(({ text, link }, index) => (
                   <li
                     key={index}
-                    onClick={() => handleBold(i, index)}
                     className={`pl-2 hover:border-slate-400 text-slate-700 list-none hover:text-slate-900 hover:border-l-2 mb-1 ${
-                      bold.group === i && bold.item === index
+                      location.pathname == link
                         ? "border-l-2 border-blue-600 font-semibold"
                         : ""
                     }`}
@@ -218,9 +220,8 @@ const Sidebar = () => {
                   {content.map(({ text, link }, index) => (
                     <li
                       key={index}
-                      onClick={() => handleBold(i, index)}
                       className={`pl-2 hover:border-slate-400 text-slate-700 list-none hover:text-slate-900 hover:border-l-2 mb-1 ${
-                        bold.group === i && bold.item === index
+                        location.pathname == link
                           ? "border-l-2 border-blue-600 font-semibold"
                           : ""
                       }`}
@@ -253,11 +254,11 @@ const Sidebar = () => {
               alt="list"
             />
             <p className="text-slate-400 mr-2">
-              {menuComponents[bold.group].title}
+              {activeComponentTitle}
             </p>
             <img className="-rotate-90 w-3 mr-2" src={dropdown} alt="arrow" />
             <p className="font-semibold">
-              {menuComponents[bold.group].content[bold.item].text}
+              {allItems[0].text}
             </p>
           </div>
         </div>

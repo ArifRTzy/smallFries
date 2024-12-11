@@ -19,6 +19,15 @@ const NavbarFloat = () => {
   const copyImgRef = useRef(null);
   const copyCode = useRef(null);
   const phonePreviewRef = useRef(null)
+  const codes = `<div className="w-full sticky top-0 rounded-full border-2 h-12 flex items-center justify-between bg-white px-6">
+  <p className="font-semibold text-lg cursor-pointer">smallFriez</p>
+  <ul className="flex gap-x-8">
+    <li className="text-sm hover:font-medium rounded-full py-2 px-4 cursor-pointer hover:bg-black/10">Home</li>
+    <li className="text-sm hover:font-medium rounded-full py-2 px-4 cursor-pointer hover:bg-black/10">About</li>
+    <li className="text-sm hover:font-medium rounded-full py-2 px-4 cursor-pointer hover:bg-black/10">Contact</li>
+    <li className="text-sm hover:font-medium rounded-full py-2 px-4 cursor-pointer hover:bg-black/10">Category</li>
+  </ul>
+</div>`
 
   const handleDevice = () => {
     setDevice((prev) => !prev);
@@ -141,7 +150,7 @@ const NavbarFloat = () => {
         <p className="text-xl font-semibold py-5">Code</p>
         <div className="w-full border-2 h-96 rounded-lg bg-[#0D1117]">
           <div className="flex justify-between h-10 items-center px-4 rounded-t-lg border-b-[1px] border-white/20 bg-[#1C2433]">
-            <p className="text-white text-sm">JSX</p>
+            <p className="text-white text-sm">HTML</p>
             <div
               ref={copyImgRef}
               className="hover:bg-white/10 w-12 rounded-lg justify-center h-7 flex"
@@ -157,7 +166,7 @@ const NavbarFloat = () => {
             <CodeHighlighter
               ref={copyCode}
               className=""
-              code={"const x = 10;\nlet y = 78"}
+              code={codes}
               language="javascript"
             />
           </div>

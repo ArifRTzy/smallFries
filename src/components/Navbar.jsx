@@ -282,10 +282,10 @@ const Navbar = () => {
   });
 
   return (
-    <div className="bg-white w-full border-b-2 border-[#E7E7E9] dark:border-[#64748B] fixed z-10 dark:bg-black">
+    <div className="bg-white w-full border-b-[1px] lg:border-b lg:border-neutral-200 dark:border-white/[0.1] fixed z-10 dark:bg-black">
       <div className="w-full px-5 lg:px-10 mx:w-[1444px] mx-auto flex justify-between py-3 items-center">
         <div className="">
-          <p className="text-2xl font-semibold">smallFriez</p>
+          <p className="text-2xl font-semibold dark:text-white">smallFriez</p>
         </div>
         <div className="hidden gap-x-4 lg:flex">
           <div className="relative">
@@ -296,7 +296,7 @@ const Navbar = () => {
             />
             <div
               ref={themesRef}
-              className={`flex-col border-2 border-solid w-36 rounded-lg absolute bg-white z-20 top-14 -left-20 shadow-lg ${
+              className={`flex-col border-2 border-solid w-36 rounded-lg absolute dark:bg-slate-800 bg-white z-20 top-14 -left-20 shadow-lg ${
                 themesMenu ? "flex" : "hidden"
               }`}
             >
@@ -321,7 +321,7 @@ const Navbar = () => {
                     className="w-6"
                   />
                   <p
-                    className={`ml-2 font-semibold text-sm ${
+                    className={`ml-2 font-semibold text-sm dark:text-slate-300 ${
                       (i === 0 && themeText.sun) ||
                       (i === 1 && themeText.moon) ||
                       (i === 2 && themeText.system)

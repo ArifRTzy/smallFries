@@ -100,7 +100,7 @@ const NavbarFloat = () => {
         <div className="overflow-auto w-full border-2 rounded-lg max-h-[350px] min-h-[350px] bg-[repeating-linear-gradient(0deg,transparent,transparent_0.4em,rgba(0,0,0,0.03)_0.5em),repeating-linear-gradient(90deg,transparent,transparent_0.4em,rgba(0,0,0,0.03)_0.5em)]">
           {device ? (
             <div className="h-[400px]">
-              <div className="w-full sticky top-0 rounded-full border-2 h-12 flex items-center justify-between bg-white px-6">
+              <div className="w-[900px] md:w-full sticky top-0 rounded-full border-2 h-12 flex items-center justify-between bg-white px-6">
                 <p className="font-semibold text-lg cursor-pointer">
                   smallFriez
                 </p>
@@ -148,7 +148,7 @@ const NavbarFloat = () => {
       </div>
       <div className="">
         <p className="text-xl font-semibold py-5">Code</p>
-        <div className="w-full border-2 h-96 rounded-lg bg-[#0D1117]">
+        <div className="w-full border-2 max-h-96 rounded-lg bg-[#0D1117]">
           <div className="flex justify-between h-10 items-center px-4 rounded-t-lg border-b-[1px] border-white/20 bg-[#1C2433]">
             <p className="text-white text-sm">HTML</p>
             <div

@@ -17,7 +17,7 @@ input[type="search"]::-webkit-search-cancel-button {
         @apply text-3xl sm:text-4xl font-bold dark:text-white
     }
     .comps-desc{
-        @apply text-lg text-slate-700 dark:text-slate-400
+        @apply text-base sm:text-lg text-slate-700 dark:text-slate-400
     }
     .comps-container{
         @apply w-full lg:py-8 lg:p-0 p-4 sm:p-8 flex flex-col gap-5

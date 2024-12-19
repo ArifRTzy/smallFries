@@ -76,6 +76,10 @@ const Sidebar = () => {
     setSearchShow(false);
   };
 
+  const handleSideMenu = ()=>{
+    setSideMenu(false)
+  }
+
   useEffect(() => {
     const handleSelectedSearch = (e) => {
       const { group, item } = activeSearchMenu;
@@ -220,6 +224,7 @@ const Sidebar = () => {
                   {content.map(({ text, link }, index) => (
                     <li
                       key={index}
+                      onClick={handleSideMenu}
                       className={`pl-2 hover:border-slate-400 text-slate-700 list-none hover:text-slate-900 hover:border-l-2 mb-1 dark:text-slate-500 dark:hover:text-slate-400 ${
                         location.pathname == link
                           ? "border-l-2 border-blue-600 font-semibold dark:text-slate-100"

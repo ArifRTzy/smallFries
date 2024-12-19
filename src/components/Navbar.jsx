@@ -452,7 +452,7 @@ const Navbar = () => {
                               index === activeSearchMenu.item &&
                               i === activeSearchMenu.group
                                 ? "bg-[#0EA5E9]"
-                                : "bg-[#F8FAFC]"
+                                : "bg-[#F8FAFC] dark:bg-[#243143]"
                             }`}
                           >
                             <img

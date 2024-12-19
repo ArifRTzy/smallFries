@@ -167,13 +167,13 @@ const Sidebar = () => {
   });
 
   return (
-    <div className="pt-[60px] bg-white w-full  dark:bg-black">
+    <div className="pt-[60px] bg-white w-full min-h-[100vh]  dark:bg-black">
       <div className="w-full lg:px-10 mx:w-[1444px] mx-auto lg:flex">
         <div className="w-[16rem] max-h-[100vh] overflow-auto lg:block hidden fixed ">
-          <div className="fixed pt-8 bg-white">
+          <div className="fixed pt-8 bg-transparent">
             <button
               ref={searchRef}
-              className="flex justify-between items-center ring-1 w-56 h-8 rounded-md text-sm ring-slate-900/10 hover:ring-slate-300 shadow-sm text-slate-400"
+              className="flex justify-between items-center ring-1 w-56 h-8 rounded-md text-sm ring-slate-900/10 hover:ring-slate-300 shadow-sm text-slate-400 dark:ring-transparent dark:hover:bg-[#334155] dark:bg-[#1E293B]"
             >
               <img className="w-5 ml-2" src={search} alt="search" />
               <p className="flex-1 flex pl-3">Search...</p>
@@ -183,13 +183,13 @@ const Sidebar = () => {
           <div className="mt-20">
             {menuComponents.map(({ title, content }, i) => (
               <div key={i} className="">
-                <p className="font-semibold mb-2">{title}</p>
+                <p className="font-semibold mb-2 dark:text-white">{title}</p>
                 {content.map(({ text, link }, index) => (
                   <li
                     key={index}
-                    className={`pl-2 hover:border-slate-400 text-slate-700 list-none hover:text-slate-900 hover:border-l-2 mb-1 ${
+                    className={`pl-2 hover:border-slate-400 text-slate-700 dark:text-slate-500 dark:hover:text-slate-400 list-none hover:text-slate-900 hover:border-l-2 mb-1 ${
                       location.pathname == link
-                        ? "border-l-2 border-blue-600 font-semibold"
+                        ? "border-l-2 border-blue-600 font-semibold dark:text-slate-100"
                         : ""
                     }`}
                   >
@@ -211,18 +211,18 @@ const Sidebar = () => {
         >
           <div
             ref={sideMenuDivRef}
-            className="absolute bg-white w-80 max-w-[calc(100%-3rem)] h-[150vh] p-6 flex justify-between"
+            className="absolute bg-white w-80 max-w-[calc(100%-3rem)] h-[150vh] p-6 flex justify-between dark:bg-slate-900"
           >
             <div className="">
               {menuComponents.map(({ title, content }, i) => (
                 <div key={i} className="">
-                  <p className="font-semibold mb-2">{title}</p>
+                  <p className="font-semibold mb-2 dark:text-white">{title}</p>
                   {content.map(({ text, link }, index) => (
                     <li
                       key={index}
-                      className={`pl-2 hover:border-slate-400 text-slate-700 list-none hover:text-slate-900 hover:border-l-2 mb-1 ${
+                      className={`pl-2 hover:border-slate-400 text-slate-700 list-none hover:text-slate-900 hover:border-l-2 mb-1 dark:text-slate-500 dark:hover:text-slate-400 ${
                         location.pathname == link
-                          ? "border-l-2 border-blue-600 font-semibold"
+                          ? "border-l-2 border-blue-600 font-semibold dark:text-slate-100"
                           : ""
                       }`}
                     >
@@ -245,7 +245,7 @@ const Sidebar = () => {
           </div>
         </div>
 
-        <div className="w-full lg:hidden border-b-2">
+        <div className="w-full lg:hidden border-b-2 dark:border-slate-500">
           <div className="flex items-center py-3">
             <img
               ref={sideMenuOpenerRef}
@@ -257,7 +257,7 @@ const Sidebar = () => {
               {activeComponentTitle}
             </p>
             <img className="-rotate-90 w-3 mr-2" src={dropdown} alt="arrow" />
-            <p className="font-semibold">
+            <p className="font-semibold dark:text-slate-400">
               {allItems[0].text}
             </p>
           </div>
@@ -271,7 +271,7 @@ const Sidebar = () => {
           <div className="flex justify-center h-full md:mt-16 md:px-32 p-6">
             <div
               ref={searchParentRef}
-              className="bg-white w-full lg:w-[750px] h-[500px] rounded-lg"
+              className="bg-white w-full lg:w-[750px] h-[500px] rounded-lg dark:bg-[#1E293B]"
             >
               <header className="flex justify-between items-center pb-3 border-b-[1px] p-4">
                 <img src={search} alt="search" className="w-5" />
@@ -281,7 +281,7 @@ const Sidebar = () => {
                   ref={searchInputRef}
                   value={searchQuery}
                   onChange={handleSearchInput}
-                  className="mx-4 w-full text-[15px] flex-1 outline-none focus:border-0 focus:outline-none"
+                  className="mx-4 w-full text-[15px] flex-1 outline-none focus:border-0 focus:outline-none bg-transparent dark:text-white"
                 />
                 <img
                   src={close}
@@ -300,7 +300,7 @@ const Sidebar = () => {
                   <div className="">
                     {filteredMenu.map(({ title, content }, i) => (
                       <div key={i} className="">
-                        <h2 className="text-base font-medium">{title}</h2>
+                        <h2 className="text-base font-medium dark:text-white">{title}</h2>
                         {content.map(({ text, link }, index) => (
                           <Link
                             key={index}
@@ -311,7 +311,7 @@ const Sidebar = () => {
                               index === activeSearchMenu.item &&
                               i === activeSearchMenu.group
                                 ? "bg-[#0EA5E9]"
-                                : "bg-[#F8FAFC]"
+                                : "bg-[#F8FAFC] dark:bg-[#243143]"
                             }`}
                           >
                             <img
@@ -326,11 +326,11 @@ const Sidebar = () => {
                                 index === activeSearchMenu.item &&
                                 i === activeSearchMenu.group
                                   ? "bg-[#0EA5E9]"
-                                  : "bg-white"
+                                  : "bg-white dark:bg-[#334155] dark:border-[#334155]"
                               }`}
                             />
                             <p
-                              className={`flex-1 px-3 text-[#334155] ${
+                              className={`flex-1 px-3 text-[#334155] dark:text-white ${
                                 index === activeSearchMenu.item &&
                                 i === activeSearchMenu.group &&
                                 "text-white"

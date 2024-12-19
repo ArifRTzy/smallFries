@@ -5,7 +5,7 @@ import FooterComps from "../FooterComps";
 const WhatIsThis = () => {
   return (
     <div className="comps-container">
-      <p className="font-semibold text-slate-600">{menuComponents[0].title}</p>
+      <p className="comps-title">{menuComponents[0].title}</p>
       <h1 className="comps-h1">What is this?</h1>
       <p className="comps-desc">
         So this is website where i put all my small projects and it&apos;s code e.g.

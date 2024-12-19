@@ -21,6 +21,8 @@ import phones from "/images/phone.svg";
 import phonesUnclick from "/images/phone-unclick.svg"
 import copies from "/images/copy.svg"
 import checks from "/images/check.svg"
+import phonesWhite from "/images/phone-white.svg"
+import laptopsWhite from "/images/laptop-white.svg"
 
 export const menuDot = menuDots;
 export const menuList = menuLists;
@@ -45,3 +47,5 @@ export const laptopUnclick = laptopsUnclick
 export const phoneUnclick = phonesUnclick
 export const copy = copies
 export const check = checks
+export const phoneWhite = phonesWhite
+export const laptopWhite = laptopsWhite

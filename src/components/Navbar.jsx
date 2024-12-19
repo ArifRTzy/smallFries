@@ -296,13 +296,13 @@ const Navbar = () => {
             />
             <div
               ref={themesRef}
-              className={`flex-col border-2 border-solid w-36 rounded-lg absolute dark:bg-slate-800 bg-white z-20 top-14 -left-20 shadow-lg ${
+              className={`flex-col border-2 border-solid w-36 dark:border-[#2A3749] rounded-lg absolute dark:bg-slate-800 bg-white z-20 top-14 -left-20 shadow-lg ${
                 themesMenu ? "flex" : "hidden"
               }`}
             >
               {themeOptions.map(({ img, text, imgBlue }, i) => (
                 <div
-                  className={`flex px-2.5 cursor-pointer py-1.5 items-center hover:bg-[#F8FAFC]  ${
+                  className={`flex px-2.5 cursor-pointer py-1.5 items-center hover:bg-[#F8FAFC] dark:hover:bg-[#2A3749] ${
                     i === 0 ? "rounded-t-lg" : i == 2 ? "rounded-b-lg" : ""
                   }
                   `}
@@ -325,7 +325,7 @@ const Navbar = () => {
                       (i === 0 && themeText.sun) ||
                       (i === 1 && themeText.moon) ||
                       (i === 2 && themeText.system)
-                        ? "text-sky-500"
+                        ? "text-sky-500 dark:text-sky-500"
                         : "text-[#334155]"
                     }`}
                   >
@@ -351,11 +351,11 @@ const Navbar = () => {
               ref={blurBgRef}
               className="w-screen inset-0 h-[100vh] bg-black/20 backdrop-blur-sm fixed"
             ></div>
-            <div className="bg-white w-full vm:w-80 h-[22rem] border-2 rounded-lg fixed z-20 top-4 right-4">
+            <div className="bg-white dark:bg-slate-800 w-full vm:w-80 h-[22rem] border-2 rounded-lg fixed z-20 top-4 right-4 dark:border-[#2A3749]">
               <div className="mx-5 py-5 flex flex-col justify-between h-full">
                 <div className="flex justify-between">
                   <a
-                    className="font-medium text-base"
+                    className="font-medium text-base dark:text-[#94A3B8]"
                     href="https://github.com/ArifRTzy"
                   >
                     GitHub
@@ -363,12 +363,12 @@ const Navbar = () => {
                   <img src={close} ref={closeRef} className="w-5" />
                 </div>
                 <div className="flex justify-between items-center">
-                  <p className="font-normal text-slate-700">Switch theme</p>
+                  <p className="font-normal text-slate-700 dark:text-slate-400">Switch theme</p>
                   <div className="relative">
                     <select
                       className={`${
                         selectedRefShow < 2 ? "w-[115px]" : "w-[137px]"
-                      } h-11 opacity-0 absolute`}
+                      } h-11 opacity-0 absolute dark:bg-black dark:text-white`}
                       ref={selectRef}
                     >
                       <option value="0">Light</option>
@@ -376,7 +376,7 @@ const Navbar = () => {
                       <option value="2">System</option>
                     </select>
                     <div
-                      className="border-2 flex items-center h-11 px-2 rounded-lg bg-white"
+                      className="border-2 flex items-center h-11 px-2 rounded-lg bg-white dark:bg-[#475569] dark:border-[#2A3749]"
                       ref={selectedRef}
                     >
                       {themeOptions.map((e, i) => (
@@ -387,7 +387,7 @@ const Navbar = () => {
                           key={i}
                         >
                           <img className="w-5 mr-3" src={e.img} alt={e.text} />
-                          <p className="font-semibold text-slate-700">
+                          <p className="font-semibold text-slate-700 dark:text-white">
                             {e.text}
                           </p>
                           <img
@@ -414,9 +414,9 @@ const Navbar = () => {
         <div className="flex justify-center h-full md:mt-16 md:px-32 p-6">
           <div
             ref={searchParentRef}
-            className="bg-white w-full lg:w-[750px] h-[500px] rounded-lg"
+            className="bg-white w-full lg:w-[750px] h-[500px] rounded-lg dark:bg-[#1E293B]"
           >
-            <header className="flex justify-between items-center pb-3 border-b-[1px] p-4">
+            <header className="flex justify-between items-center pb-3 border-b-[1px] p-4 dark:border-b-slate-700">
               <img src={search} alt="search" className="w-5" />
               <input
                 type="search"
@@ -424,7 +424,7 @@ const Navbar = () => {
                 ref={searchInputRef}
                 value={searchQuery}
                 onChange={handleSearchInput}
-                className="mx-4 w-full text-[15px] flex-1 outline-none focus:border-0 focus:outline-none"
+                className="mx-4 w-full text-[15px] flex-1 outline-none focus:border-0 focus:outline-none bg-transparent dark:text-white"
               />
               <img
                 src={close}
@@ -441,14 +441,14 @@ const Navbar = () => {
                   <div className="">
                     {filteredMenu.map(({ title, content }, i) => (
                       <div key={i} className="">
-                        <h2 className="text-base font-medium">{title}</h2>
+                        <h2 className="text-base font-medium dark:text-white">{title}</h2>
                         {content.map(({text, link}, index) => (
                           <Link
                             key={index}
                             to={link}
                             onMouseEnter={() => handleHover(i, index)}
                             onClick={handleSearchVisibility}
-                            className={`flex justify-between px-3 py-3 rounded-lg items-center cursor-pointer ${
+                            className={`flex justify-between px-3 py-3 mb-2 rounded-lg items-center cursor-pointer ${
                               index === activeSearchMenu.item &&
                               i === activeSearchMenu.group
                                 ? "bg-[#0EA5E9]"
@@ -467,11 +467,11 @@ const Navbar = () => {
                                 index === activeSearchMenu.item &&
                                 i === activeSearchMenu.group
                                   ? "bg-[#0EA5E9]"
-                                  : "bg-white"
+                                  : "bg-white dark:bg-[#334155] dark:border-[#334155]"
                               }`}
                             />
                             <p
-                              className={`flex-1 px-3 text-[#334155] ${
+                              className={`flex-1 px-3 text-[#334155] dark:text-white ${
                                 index === activeSearchMenu.item &&
                                 i === activeSearchMenu.group &&
                                 "text-white"

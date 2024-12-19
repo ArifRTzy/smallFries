@@ -15,7 +15,7 @@ import {
 import FooterComps from "../FooterComps";
 
 const NavbarFloat = () => {
-  const [device, setDevice] = useState(false);
+  const [device, setDevice] = useState(true);
   const [copyCheck, setCopyCheck] = useState(false);
   const [phonePreviewMenu, setPhonePreviewMenu] = useState(false)
   const copyImgRef = useRef(null);

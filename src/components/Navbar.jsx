@@ -44,7 +44,10 @@ const Navbar = () => {
   });
   const [selectedRefShow, setSelectedRefShow] = useState(() => {
     const savedSelect = localStorage.getItem("selectedRef");
-    return savedSelect === false || savedSelect === undefined ? 0 : savedSelect;
+    if (!savedSelect) {
+      return 2; // Covers false, undefined, and null
+    }
+    return savedSelect;
   });
   const [menuShow, setMenuShow] = useState(false);
   const [activeSearchMenu, setActiveSearchMenu] = useState({group: 0, item: 0});
@@ -382,7 +385,7 @@ const Navbar = () => {
                       {themeOptions.map((e, i) => (
                         <div
                           className={`items-center w-full justify-between ${
-                            i != selectedRefShow ? "hidden" : "flex"
+                            i == selectedRefShow ? "flex" : "hidden"
                           }`}
                           key={i}
                         >
